@@ -26,7 +26,7 @@ public class Product implements Serializable {
 	private Double price;
 	
 	@JsonIgnore
-	@ManyToMany
+	@ManyToMany(mappedBy = "producties")
 	private Set<Category> categories = new HashSet<>();
 	
 	public Product() {

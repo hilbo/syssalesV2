@@ -22,17 +22,19 @@ public class Cid implements CommandLineRunner {
 		productService.save(product01);
 		Product product02 = new Product(null, "Produto02", 300.0);
 		productService.save(product02);
+		Product product03 = new Product(null, "Produto02", 400.0);
+		productService.save(product03);
 		
 		Category category01 = new Category(null, "Category01");
 		categoryService.save(category01);
 		Category category02 = new Category(null, "Category02");
 		categoryService.save(category02);
 		
-		product01.getCategories().addAll(Arrays.asList(category01, category02));
-		productService.save(product01);
+		category01.getProducties().addAll(Arrays.asList(product01, product02, product03));
+		categoryService.save(category01);
 		
-		product02.getCategories().add(category01);
-		productService.save(product02);
-		
+		category02.getProducties().add(product02);
+		categoryService.save(category02);
+				
 	}
 }

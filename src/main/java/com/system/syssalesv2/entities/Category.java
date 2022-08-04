@@ -21,7 +21,7 @@ public class Category implements Serializable {
 	private Long id;
 	private String name;
 	
-	@ManyToMany(mappedBy = "categories")
+	@ManyToMany
 	private Set<Product> producties = new HashSet<>();
 	
 	public Category() {
