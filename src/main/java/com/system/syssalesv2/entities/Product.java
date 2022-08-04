@@ -1,12 +1,18 @@
 package com.system.syssalesv2.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_product")
@@ -18,6 +24,10 @@ public class Product implements Serializable {
 	private Long id;
 	private String name;
 	private Double price;
+	
+	@JsonIgnore
+	@ManyToMany
+	private Set<Category> categories = new HashSet<>();
 	
 	public Product() {
 	}
@@ -50,6 +60,10 @@ public class Product implements Serializable {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
 	@Override
