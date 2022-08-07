@@ -18,6 +18,8 @@ public class Cid implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		
+		//Instanceament de Producties, Categories and associations.
 		Product product01 = new Product(null, "Produto01", 200.0);
 		productService.save(product01);
 		Product product02 = new Product(null, "Produto02", 300.0);
@@ -32,7 +34,6 @@ public class Cid implements CommandLineRunner {
 		
 		category01.getProducties().addAll(Arrays.asList(product01, product02, product03));
 		categoryService.save(category01);
-		
 		category02.getProducties().add(product02);
 		categoryService.save(category02);
 				
