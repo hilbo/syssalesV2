@@ -1,11 +1,15 @@
 package com.system.syssalesv2.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.system.syssalesv2.entities.enums.TypeClient;
@@ -22,6 +26,9 @@ public class Client implements Serializable{
 	private String email;
 	private String cpfOrCnpj;
 	private Integer typeClient;
+	
+	@OneToMany
+	private Set<Address> addresses = new HashSet<>();
 	
 	public Client() {
 	}
@@ -72,6 +79,10 @@ public class Client implements Serializable{
 
 	public void setTypeClient(TypeClient typeClient) {
 		this.typeClient = typeClient.getCod();
+	}
+	
+	public Set<Address> getAddresses() {
+		return addresses;
 	}
 
 	@Override
