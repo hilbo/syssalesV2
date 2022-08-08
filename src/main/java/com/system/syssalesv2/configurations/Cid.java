@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import com.system.syssalesv2.entities.Category;
+import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Product;
+import com.system.syssalesv2.entities.enums.TypeClient;
 import com.system.syssalesv2.services.CategoryService;
+import com.system.syssalesv2.services.ClientService;
 import com.system.syssalesv2.services.ProductService;
 
 @Configuration
@@ -15,6 +18,8 @@ public class Cid implements CommandLineRunner {
 	ProductService productService;
 	@Autowired
 	CategoryService categoryService;
+	@Autowired
+	ClientService clientService;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -36,6 +41,11 @@ public class Cid implements CommandLineRunner {
 		categoryService.save(category01);
 		category02.getProducties().add(product02);
 		categoryService.save(category02);
-				
+		
+		Client client01 = new Client(null, "Cliente01", "cliente01@email.com", "cpf", TypeClient.PESSOAJURIDICA);
+		clientService.save(client01);
+		
+		
+		
 	}
 }
