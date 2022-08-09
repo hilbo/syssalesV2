@@ -1,5 +1,6 @@
 package com.system.syssalesv2.configurations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -11,6 +12,7 @@ import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.entities.State;
+import com.system.syssalesv2.entities.Telephone;
 import com.system.syssalesv2.entities.enums.TypeClient;
 import com.system.syssalesv2.services.AddressService;
 import com.system.syssalesv2.services.CategoryService;
@@ -18,6 +20,7 @@ import com.system.syssalesv2.services.CityService;
 import com.system.syssalesv2.services.ClientService;
 import com.system.syssalesv2.services.ProductService;
 import com.system.syssalesv2.services.StateService;
+import com.system.syssalesv2.services.TelephoneService;
 
 @Configuration
 public class Cid implements CommandLineRunner {
@@ -33,6 +36,8 @@ public class Cid implements CommandLineRunner {
 	private CityService cityService;
 	@Autowired
 	private StateService stateService;
+	@Autowired
+	private TelephoneService telephoneService;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -64,15 +69,21 @@ public class Cid implements CommandLineRunner {
 		cityService.save(city01);
 		City city02 = new City(null, "São Paulo", state01);
 		cityService.save(city02);
-				
+			
 		Address address01 = new Address(null, "Rua Epiceia", 78, "Casa 1", "Jardim Ana Maria", "09931340", city01);
 		addressService.save(address01);
 		Address address02 = new Address(null, "Rua Epiceia", 100, "Casa 2", "Jardim Ana Maria", "09931340", city02);
 		addressService.save(address02);
 		
+		Telephone telephone01 = new Telephone(null, "46818842");
+		Telephone telephone02 = new Telephone(null, "94600999");
+		telephoneService.save(telephone01);
+		telephoneService.save(telephone02);
+		
 		Client client01 = new Client(null, "Cliente01", "cliente01@email.com", "cpf", TypeClient.PESSOAJURIDICA);
 		client01.getAddresses().add(address01);
 		//client01.getAddresses().add(address02);
+		client01.getTelephones().addAll(Arrays.asList(telephone01, telephone02));
 		clientService.save(client01);
 		
 		Client client02 = new Client(null, "Cliente02", "cliente01@email.com", "cpf", TypeClient.PESSOAJURIDICA);

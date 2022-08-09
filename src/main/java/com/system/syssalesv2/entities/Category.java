@@ -21,6 +21,7 @@ public class Category implements Serializable {
 	private Long id;
 	private String name;
 	
+	//@JsonIgnore
 	@ManyToMany
 	private Set<Product> producties = new HashSet<>();
 	

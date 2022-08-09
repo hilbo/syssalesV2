@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_address")
@@ -23,6 +26,11 @@ public class Address implements Serializable{
 	private String complement;
 	private String district;
 	private String zipCode;
+	
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "id_client")
+	private Client client;
 	
 	@ManyToOne
 	private City city;
@@ -111,5 +119,13 @@ public class Address implements Serializable{
 			return false;
 		Address other = (Address) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 }

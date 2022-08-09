@@ -2,34 +2,28 @@ package com.system.syssalesv2.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tb_city")
-public class City implements Serializable{
+@Table(name = "tb_telephone")
+public class Telephone implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
+	private String number;
 	
-	@ManyToOne
-	private State state;
-	
-	public City() {
+	public Telephone() {
 	}
-	
-	public City(Long id, String name, State state) {
+
+	public Telephone(Long id, String number) {
 		this.id = id;
-		this.name = name;
-		this.setState(state);
+		this.number = number;
 	}
 
 	public Long getId() {
@@ -40,20 +34,12 @@ public class City implements Serializable{
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public State getState() {
-		return state;
-	}
-
-	public void setState(State state) {
-		this.state = state;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	@Override
@@ -69,8 +55,7 @@ public class City implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		City other = (City) obj;
-		return Objects.equals(id, other.id);
+		Telephone other = (Telephone) obj;
+		return id == other.id;
 	}
-
 }
