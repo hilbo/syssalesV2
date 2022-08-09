@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,16 +24,20 @@ public class Address implements Serializable{
 	private String district;
 	private String zipCode;
 	
+	@ManyToOne
+	private City city;
+		
 	public Address() {
 	}
 
-	public Address(Long id, String address, Integer number, String complement, String district, String zipCode) {
+	public Address(Long id, String address, Integer number, String complement, String district, String zipCode, City city) {
 		this.id = id;
 		this.address = address;
 		this.number = number;
 		this.complement = complement;
 		this.district = district;
 		this.zipCode = zipCode;
+		this.city = city;
 	}
 
 	public Long getId() {
@@ -83,6 +88,14 @@ public class Address implements Serializable{
 		this.zipCode = zipCode;
 	}
 	
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

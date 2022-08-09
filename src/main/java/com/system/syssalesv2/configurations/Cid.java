@@ -7,25 +7,33 @@ import org.springframework.context.annotation.Configuration;
 
 import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.Category;
+import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Product;
+import com.system.syssalesv2.entities.State;
 import com.system.syssalesv2.entities.enums.TypeClient;
 import com.system.syssalesv2.services.AddressService;
 import com.system.syssalesv2.services.CategoryService;
+import com.system.syssalesv2.services.CityService;
 import com.system.syssalesv2.services.ClientService;
 import com.system.syssalesv2.services.ProductService;
+import com.system.syssalesv2.services.StateService;
 
 @Configuration
 public class Cid implements CommandLineRunner {
 	@Autowired
-	ProductService productService;
+	private ProductService productService;
 	@Autowired
-	CategoryService categoryService;
+	private CategoryService categoryService;
 	@Autowired
-	ClientService clientService;
+	private ClientService clientService;
 	@Autowired
-	AddressService addressService;
-
+	private AddressService addressService;
+	@Autowired
+	private CityService cityService;
+	@Autowired
+	private StateService stateService;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		
@@ -47,9 +55,19 @@ public class Cid implements CommandLineRunner {
 		category02.getProducties().add(product02);
 		categoryService.save(category02);
 		
-		Address address01 = new Address(null, "Rua Epiceia", 78, "Casa 1", "Jardim Ana Maria", "09931340");
+		State state01 = new State(null, "SP");
+		stateService.save(state01);
+		State state02 = new State(null, "RJ");
+		stateService.save(state02);
+		
+		City city01 = new City(null, "Diadema", state01);
+		cityService.save(city01);
+		City city02 = new City(null, "São Paulo", state01);
+		cityService.save(city02);
+				
+		Address address01 = new Address(null, "Rua Epiceia", 78, "Casa 1", "Jardim Ana Maria", "09931340", city01);
 		addressService.save(address01);
-		Address address02 = new Address(null, "Rua Epiceia", 100, "Casa 2", "Jardim Ana Maria", "09931340");
+		Address address02 = new Address(null, "Rua Epiceia", 100, "Casa 2", "Jardim Ana Maria", "09931340", city02);
 		addressService.save(address02);
 		
 		Client client01 = new Client(null, "Cliente01", "cliente01@email.com", "cpf", TypeClient.PESSOAJURIDICA);
