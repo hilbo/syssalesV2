@@ -1,7 +1,8 @@
 package com.system.syssalesv2.configurations;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Client;
+import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.entities.State;
 import com.system.syssalesv2.entities.Telephone;
@@ -18,6 +20,7 @@ import com.system.syssalesv2.services.AddressService;
 import com.system.syssalesv2.services.CategoryService;
 import com.system.syssalesv2.services.CityService;
 import com.system.syssalesv2.services.ClientService;
+import com.system.syssalesv2.services.OrderService;
 import com.system.syssalesv2.services.ProductService;
 import com.system.syssalesv2.services.StateService;
 import com.system.syssalesv2.services.TelephoneService;
@@ -38,6 +41,8 @@ public class Cid implements CommandLineRunner {
 	private StateService stateService;
 	@Autowired
 	private TelephoneService telephoneService;
+	@Autowired
+	private OrderService orderService;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -91,7 +96,11 @@ public class Cid implements CommandLineRunner {
 		//client01.getAddresses().add(address02);
 		clientService.save(client02);
 		
+		Order order01 = new Order(null, LocalDateTime.now(), client01, address02);
+		orderService.save(order01);
 		
+		Order order02 = new Order(null, LocalDateTime.now(), client01, address02);
+		orderService.save(order02);
 		
 	}
 }

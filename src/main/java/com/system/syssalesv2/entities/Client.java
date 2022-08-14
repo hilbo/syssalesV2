@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.system.syssalesv2.entities.enums.TypeClient;
 
 @Entity
@@ -34,6 +35,10 @@ public class Client implements Serializable{
 	
 	@OneToMany
 	private List<Telephone> telephones = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToMany (mappedBy = "client")
+	private List<Order> orders = new ArrayList<>();
 	
 	public Client() {
 	}
