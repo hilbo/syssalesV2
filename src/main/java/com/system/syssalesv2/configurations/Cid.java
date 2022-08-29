@@ -14,6 +14,7 @@ import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.Payment;
 import com.system.syssalesv2.entities.PaymentWithCard;
+import com.system.syssalesv2.entities.PaymentWithTicket;
 import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.entities.State;
 import com.system.syssalesv2.entities.Telephone;
@@ -108,8 +109,15 @@ public class Cid implements CommandLineRunner {
 		Order order02 = new Order(null, LocalDateTime.now(), client01, address02);
 		orderService.save(order02);
 		
-		Payment pay01 = new PaymentWithCard(null, StatePayment.PENDENTE, 2);
+		Payment pay01 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order01);
 		paymentService.save(pay01);
+		
+		Payment pay02 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order02);
+		paymentService.save(pay02);
+		
+		
+		
+				
 		
 	}
 }

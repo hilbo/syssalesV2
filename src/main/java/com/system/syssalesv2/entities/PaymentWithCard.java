@@ -13,16 +13,16 @@ public class PaymentWithCard extends Payment {
 	public PaymentWithCard() {
 	}
 
-	public PaymentWithCard(Long id,StatePayment paymentState, Integer numberStallments) {
-		super(id, paymentState);
+	public PaymentWithCard(Long id,StatePayment paymentState, Integer numberStallments, Order order) {
+		super(id, paymentState, order);
 		this.numberStallments = numberStallments;
 	}
 
-	public Integer getNumberIstallments() {
+	public Integer getNumberStallments() {
 		return numberStallments;
 	}
 
-	public void setNumberIstallments(Integer numberIstallments) {
+	public void setNumberStallments(Integer numberIstallments) {
 		this.numberStallments = numberIstallments;
 	}
 }

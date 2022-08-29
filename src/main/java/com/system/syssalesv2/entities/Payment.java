@@ -7,8 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.system.syssalesv2.entities.enums.StatePayment;
 
 @Entity
@@ -17,15 +21,20 @@ public class Payment implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Integer paymentState;
+	
+	@JsonIgnore
+	@OneToOne
+	private Order order;
 	
 	public Payment() {
 	}
 
-	public Payment(Long id, StatePayment paymentState) {
+	public Payment(Long id, StatePayment paymentState, Order order) {
 		this.paymentState = paymentState.getCod();
+		this.order = order;
 	}
 
 	public Long getId() {
@@ -36,12 +45,20 @@ public class Payment implements Serializable{
 		this.id = id;
 	}
 
-	public Integer getPaymentState() {
-		return paymentState;
+	public StatePayment getPaymentState() {
+		return StatePayment.statePaymentToEnum(paymentState);
 	}
 
 	public void setPaymentState(Integer paymentState) {
 		this.paymentState = paymentState;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	@Override
@@ -60,4 +77,5 @@ public class Payment implements Serializable{
 		Payment other = (Payment) obj;
 		return Objects.equals(id, other.id);
 	}
+
 }

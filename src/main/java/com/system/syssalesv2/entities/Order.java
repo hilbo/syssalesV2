@@ -4,11 +4,16 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +31,9 @@ public class Order implements Serializable {
 	
 	@ManyToOne
 	private Client client;
+	
+	@OneToOne(mappedBy = "order")
+	private Payment payment;
 	
 	public Order() {
 	}
@@ -67,6 +75,10 @@ public class Order implements Serializable {
 
 	public void setDeliveryaddress(Address deliveryaddress) {
 		this.deliveryaddress = deliveryaddress;
+	}
+
+	public Payment getPayment() {
+		return payment;
 	}
 
 	@Override

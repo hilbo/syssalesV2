@@ -19,6 +19,13 @@ public class PaymentService {
 	}
 	
 	public Payment save(Payment payment) {
+		
+		for (Payment payment2 : paymentRepository.findAll()) {
+			if (payment2.getOrder().equals(payment.getOrder())) {
+				throw new RuntimeException("Erro !!!!!!!!!!!!!!!!!!!!!!");
+			}
+		}
+		
 		return paymentRepository.save(payment);
 	}
 }
