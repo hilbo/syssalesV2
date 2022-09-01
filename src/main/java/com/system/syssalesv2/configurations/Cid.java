@@ -79,12 +79,12 @@ public class Cid implements CommandLineRunner {
 		
 		City city01 = new City(null, "Diadema", state01);
 		cityService.save(city01);
-		City city02 = new City(null, "São Paulo", state01);
+		City city02 = new City(null, "São Paulo", state02);
 		cityService.save(city02);
-			
+					
 		Address address01 = new Address(null, "Rua Epiceia", 78, "Casa 1", "Jardim Ana Maria", "09931340", city01);
 		addressService.save(address01);
-		Address address02 = new Address(null, "Rua Epiceia", 100, "Casa 2", "Jardim Ana Maria", "09931340", city02);
+		Address address02 = new Address(null, "Rua Epiceia", 100, "Casa 2", "Jardim Ana Maria", "09931340", city01);
 		addressService.save(address02);
 		
 		Telephone telephone01 = new Telephone(null, "46818842");
@@ -112,12 +112,9 @@ public class Cid implements CommandLineRunner {
 		Payment pay01 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order01);
 		paymentService.save(pay01);
 		
-		Payment pay02 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order02);
+		Payment pay02 = new PaymentWithTicket(null, StatePayment.PENDENTE, LocalDateTime.now(), order02);
 		paymentService.save(pay02);
 		
-		
-		
-				
 		
 	}
 }

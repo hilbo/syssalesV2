@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 
 import com.system.syssalesv2.entities.enums.StatePayment;
+import com.system.syssalesv2.util.CalculatorOfDue;
 
 @Entity
 public class PaymentWithTicket extends Payment {
@@ -16,10 +17,10 @@ public class PaymentWithTicket extends Payment {
 	public PaymentWithTicket() {
 	}
 
-	public PaymentWithTicket(Long id, StatePayment paymentState, LocalDateTime paymentDate, LocalDateTime dueDate, Order order) {
+	public PaymentWithTicket(Long id, StatePayment paymentState, LocalDateTime paymentDate, Order order) {
 		super(id, paymentState, order);
 		this.paymentDate = paymentDate;
-		this.dueDate = dueDate;
+		this.dueDate = CalculatorOfDue.calculateDueDate(paymentDate);
 	}
 
 	public LocalDateTime getPaymentDate() {
