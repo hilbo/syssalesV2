@@ -5,27 +5,38 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.Payment;
+import com.system.syssalesv2.repositories.OrderRepository;
 import com.system.syssalesv2.repositories.PaymentRepository;
+import com.system.syssalesv2.serviceExecptions.ServiceOrderAssociateException;
 
 
 @Service
 public class PaymentService {
 	@Autowired
 	PaymentRepository paymentRepository;
+	
+	@Autowired
+	OrderRepository orderRepository;
 		
 	public List<Payment> findAll(){
 		return paymentRepository.findAll();
 	}
 	
 	public Payment save(Payment payment) {
-		
-		for (Payment payment2 : paymentRepository.findAll()) {
-			if (payment2.getOrder().equals(payment.getOrder())) {
-				throw new RuntimeException("Erro !!!!!!!!!!!!!!!!!!!!!!");
-			}
+		 try {
+			 findPerOrder(payment.getOrder().getId());
+			 return paymentRepository.save(payment);
+		} catch (ServiceOrderAssociateException e) {
+			throw new ServiceOrderAssociateException(e.getMessage());
 		}
-		
-		return paymentRepository.save(payment);
+	}
+
+	private void findPerOrder(Long orderId) {
+		Order order = orderRepository.findById(orderId).get();
+		if (paymentRepository.findPerOrder(order) != null) {
+			throw new ServiceOrderAssociateException("Pedido já está associado a um pagamento !");
+		}
 	}
 }

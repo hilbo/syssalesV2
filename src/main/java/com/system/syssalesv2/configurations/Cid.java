@@ -112,7 +112,7 @@ public class Cid implements CommandLineRunner {
 		Payment pay01 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order01);
 		paymentService.save(pay01);
 		
-		Payment pay02 = new PaymentWithTicket(null, StatePayment.PENDENTE, LocalDateTime.now(), order02);
+		Payment pay02 = new PaymentWithTicket(null, StatePayment.PENDENTE, LocalDateTime.now(), order01);
 		paymentService.save(pay02);
 		
 		
