@@ -1,11 +1,10 @@
 package com.system.syssalesv2;
 
-import com.system.syssalesv2.validatories.Validation;
 import com.system.syssalesv2.validatories.Validator;
+import com.system.syssalesv2.validatories.implementations.Validation;
 
 public class TestaCpf {
-
-	@SuppressWarnings("null")
+	
 	public static void main(String[] args) {
 		
 		Validator vali = new Validation();

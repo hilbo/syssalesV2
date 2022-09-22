@@ -1,6 +1,10 @@
-package com.system.syssalesv2.validatories;
+package com.system.syssalesv2.validatories.implementations;
 
 import javax.validation.ValidationException;
+
+import com.system.syssalesv2.validatories.Validator;
+import com.system.syssalesv2.validatories.checkers.IsCNPJ;
+import com.system.syssalesv2.validatories.checkers.IsCPF;
 
 public class Validation implements Validator {
 

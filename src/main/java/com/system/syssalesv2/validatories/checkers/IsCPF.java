@@ -1,4 +1,4 @@
-package com.system.syssalesv2.validatories;
+package com.system.syssalesv2.validatories.checkers;
 
 import java.util.ArrayList;
 import java.util.List;

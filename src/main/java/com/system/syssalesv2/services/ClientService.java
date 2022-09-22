@@ -9,9 +9,9 @@ import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.enums.TypeClient;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
-import com.system.syssalesv2.validatories.Validation;
 import com.system.syssalesv2.validatories.Validator;
 import com.system.syssalesv2.validatories.execptions.ValidationExceptionService;
+import com.system.syssalesv2.validatories.implementations.Validation;
 
 @Service
 public class ClientService {
