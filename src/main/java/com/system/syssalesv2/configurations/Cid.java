@@ -92,13 +92,13 @@ public class Cid implements CommandLineRunner {
 		telephoneService.save(telephone01);
 		telephoneService.save(telephone02);
 		
-		Client client01 = new Client(null, "Cliente01", "cliente01@email.com", "cpf", TypeClient.PESSOAJURIDICA);
+		Client client01 = new Client(null, "Cliente01", "cliente01@email.com", "15357450889", TypeClient.PESSOAFISICA);
 		client01.getAddresses().add(address01);
 		//client01.getAddresses().add(address02);
 		client01.getTelephones().addAll(Arrays.asList(telephone01, telephone02));
 		clientService.save(client01);
 		
-		Client client02 = new Client(null, "Cliente02", "cliente01@email.com", "cpf", TypeClient.PESSOAJURIDICA);
+		Client client02 = new Client(null, "Cliente02", "cliente01@email.com", "15357450889", TypeClient.PESSOAJURIDICA);
 		client02.getAddresses().add(address02);
 		//client01.getAddresses().add(address02);
 		clientService.save(client02);
@@ -112,7 +112,7 @@ public class Cid implements CommandLineRunner {
 		Payment pay01 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order01);
 		paymentService.save(pay01);
 		
-		Payment pay02 = new PaymentWithTicket(null, StatePayment.PENDENTE, LocalDateTime.now(), order01);
+		Payment pay02 = new PaymentWithTicket(null, StatePayment.PENDENTE, LocalDateTime.now(), order02);
 		paymentService.save(pay02);
 		
 		

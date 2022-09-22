@@ -1,11 +1,17 @@
 package com.system.syssalesv2.services;
 
+import javax.validation.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.system.syssalesv2.entities.Client;
+import com.system.syssalesv2.entities.enums.TypeClient;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
+import com.system.syssalesv2.validatories.Validation;
+import com.system.syssalesv2.validatories.Validator;
+import com.system.syssalesv2.validatories.execptions.ValidationExceptionService;
 
 @Service
 public class ClientService {
@@ -13,7 +19,30 @@ public class ClientService {
 	ClientRepository clientRepository;
 	
 	public Client save(Client client) {
-		return clientRepository.save(client);
+		Validator validator = new Validation();
+		
+		if (client.getTypeClient().equals(TypeClient.PESSOAFISICA)) {
+			try {
+				validator.validCPF(client.getCpfOrCnpj());
+				return clientRepository.save(client);
+			} catch (ValidationException e) {
+				throw new ValidationExceptionService(e.getMessage());
+			}
+		}
+		
+		/*
+		if (client.getTypeClient().equals(TypeClient.PESSOAJURIDICA)) {
+			try {
+				validator.validCNPJ(client.getCpfOrCnpj());
+				return clientRepository.save(client);
+			} catch (ValidationException e) {
+				throw new ValidationExceptionService(e.getMessage());
+			}
+		}
+		*/
+		
+		return null;
+		
 	}
 	
 	public Client findById(Long id) {

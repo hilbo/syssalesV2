@@ -9,6 +9,7 @@ public class SpecificException implements Serializable{
 	private Integer status;
 	private String error;
 	private String defaultMessage;
+	private String field;
 		
 	public SpecificException() {
 	}
@@ -43,6 +44,14 @@ public class SpecificException implements Serializable{
 
 	public void setCodInternal(Integer codInternal) {
 		this.codInternal = codInternal;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
 	}
 	
 }
