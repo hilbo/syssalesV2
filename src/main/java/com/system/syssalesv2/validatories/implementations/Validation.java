@@ -25,4 +25,12 @@ public class Validation implements Validator {
 			return true;
 		}
 	}
+
+	@Override
+	public Boolean validBlanck(String value) {
+		if (value.isBlank()) {
+			throw new ValidationException("Não pode ser branco ou nulo !");
+		}
+		return true;
+	}
 }

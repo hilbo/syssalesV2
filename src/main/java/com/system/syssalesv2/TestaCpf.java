@@ -17,7 +17,7 @@ public class TestaCpf {
 		
 		//System.out.println(ValidCPF.isValid("12232186865"));
 		
-		System.out.println(vali.validCNPJ("05396440000123"));
+		System.out.println(vali.validCNPJ("05396440000126"));
 		
 		//for (Integer string : ValidCPF.naneDigits("34485861023")) {
 			//System.out.println(string);

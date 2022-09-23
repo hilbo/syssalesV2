@@ -17,34 +17,26 @@ import com.system.syssalesv2.validatories.implementations.Validation;
 public class ClientService {
 	@Autowired
 	ClientRepository clientRepository;
-	
+
 	public Client save(Client client) {
 		Validator validator = new Validation();
-		
-		if (client.getTypeClient().equals(TypeClient.PESSOAFISICA)) {
-			try {
+		try {
+			validator.validBlanck(client.getName());
+
+			if (client.getTypeClient().equals(TypeClient.PESSOAFISICA)) {
 				validator.validCPF(client.getCpfOrCnpj());
-				return clientRepository.save(client);
-			} catch (ValidationException e) {
-				throw new ValidationExceptionService(e.getMessage());
 			}
-		}
-		
-		/*
-		if (client.getTypeClient().equals(TypeClient.PESSOAJURIDICA)) {
-			try {
+
+			if (client.getTypeClient().equals(TypeClient.PESSOAJURIDICA)) {
 				validator.validCNPJ(client.getCpfOrCnpj());
-				return clientRepository.save(client);
-			} catch (ValidationException e) {
-				throw new ValidationExceptionService(e.getMessage());
 			}
+
+		} catch (ValidationException e) {
+			throw new ValidationExceptionService(e.getMessage());
 		}
-		*/
-		
-		return null;
-		
+		return clientRepository.save(client);
 	}
-	
+
 	public Client findById(Long id) {
 		try {
 			return clientRepository.findById(id).get();

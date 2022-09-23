@@ -29,5 +29,4 @@ public class ClientResource {
 		clientService.save(client);
 		return ResponseEntity.created(null).build();
 	}
-
 }

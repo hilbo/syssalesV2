@@ -98,7 +98,7 @@ public class Cid implements CommandLineRunner {
 		client01.getTelephones().addAll(Arrays.asList(telephone01, telephone02));
 		clientService.save(client01);
 		
-		Client client02 = new Client(null, "Cliente02", "cliente01@email.com", "15357450889", TypeClient.PESSOAJURIDICA);
+		Client client02 = new Client(null, "Cliente02", "cliente01@email.com", "15357450889", TypeClient.PESSOAFISICA);
 		client02.getAddresses().add(address02);
 		//client01.getAddresses().add(address02);
 		clientService.save(client02);
