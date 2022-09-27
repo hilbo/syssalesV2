@@ -9,7 +9,6 @@ import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.enums.TypeClient;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
-import com.system.syssalesv2.validatories.Validator;
 import com.system.syssalesv2.validatories.execptions.ValidationExceptionService;
 import com.system.syssalesv2.validatories.implementations.Validation;
 
@@ -19,22 +18,24 @@ public class ClientService {
 	ClientRepository clientRepository;
 
 	public Client save(Client client) {
-		Validator validator = new Validation();
+		Validation validator = new Validation();
 		try {
 			validator.validBlanck(client.getName());
-
 			if (client.getTypeClient().equals(TypeClient.PESSOAFISICA)) {
 				validator.validCPF(client.getCpfOrCnpj());
 			}
-
 			if (client.getTypeClient().equals(TypeClient.PESSOAJURIDICA)) {
 				validator.validCNPJ(client.getCpfOrCnpj());
 			}
 
+			validator.valid();
+
+			return clientRepository.save(client);
+
 		} catch (ValidationException e) {
-			throw new ValidationExceptionService(e.getMessage());
+			throw new ValidationExceptionService(e.getMessage(), validator.getError());
 		}
-		return clientRepository.save(client);
+
 	}
 
 	public Client findById(Long id) {

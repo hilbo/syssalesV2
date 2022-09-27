@@ -39,23 +39,15 @@ public class ResourceExecption {
 	@ExceptionHandler(ValidationExceptionService.class)
 	public ResponseEntity<StandardException> ValidationExceptionService(ValidationExceptionService e, HttpServletRequest request) {
 		StandardException error = new StandardException();
-		//SpecificException specificException = new SpecificException();
-		//SpecificException specificException2 = new SpecificException();
-		
 		error.setTimestamp(LocalDateTime.now());
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
 		error.setError(HttpStatus.BAD_REQUEST.name());
 		error.setPath(request.getRequestURI());
-		//error.setDefaultMessage("VALIDATION ERROR");
 		error.setDefaultMessage(e.getMessage());
 		
-		//specificException.setDefaultMessage("teste");
-		//specificException2.setDefaultMessage("teste2");
-		
-		//error.getErros().add(specificException);
-		//error.getErros().add(specificException2);
-		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+		error.getErros().addAll(e.getError().getErros());
+						
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getError());
 	}
 	
 	
