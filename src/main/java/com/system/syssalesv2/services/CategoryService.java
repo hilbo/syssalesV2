@@ -2,6 +2,8 @@ package com.system.syssalesv2.services;
 
 import java.util.NoSuchElementException;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +24,21 @@ public class CategoryService {
 		}
 	}
 	
+	@Transactional
 	public Category save(Category category) {
+		category.setId(null);
 		return categoryRepository.save(category);
+	}
+	
+	public void update(Long id, Category category) {
+		Category catTmp = findById(id);
+		
+		if (!category.getName().equals(null)) {
+			catTmp.setName(category.getName());
+		}
+		
+		categoryRepository.save(catTmp);
+		
 	}
 
 }
