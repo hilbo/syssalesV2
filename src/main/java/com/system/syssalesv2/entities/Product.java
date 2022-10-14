@@ -1,7 +1,9 @@
 package com.system.syssalesv2.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -10,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,6 +31,10 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@ManyToMany(mappedBy = "producties")
 	private Set<Category> categories = new HashSet<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "product")
+	private List<OrderItem> orderItens = new ArrayList<>();
 	
 	public Product() {
 	}
@@ -81,5 +88,9 @@ public class Product implements Serializable {
 			return false;
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public List<OrderItem> getOrderItens() {
+		return orderItens;
 	}
 }

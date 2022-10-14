@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.system.syssalesv2.DTO.ClientDTO;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.services.ClientService;
 
@@ -25,8 +26,8 @@ public class ClientResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Client> save(@RequestBody Client client){
-		clientService.save(client);
+	public ResponseEntity<Client> save(@RequestBody ClientDTO clientDto){
+		clientService.saveDTO(clientDto);
 		return ResponseEntity.created(null).build();
 	}
 }

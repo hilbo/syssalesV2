@@ -44,10 +44,9 @@ public class ResourceExecption {
 		error.setError(HttpStatus.BAD_REQUEST.name());
 		error.setPath(request.getRequestURI());
 		error.setDefaultMessage(e.getMessage());
-		
 		error.getErros().addAll(e.getError().getErros());
 						
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getError());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 	
 	

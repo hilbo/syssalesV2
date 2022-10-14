@@ -2,6 +2,8 @@ package com.system.syssalesv2.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -9,28 +11,36 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.system.syssalesv2.entities.enums.OrderStatus;
 
 @Entity
 @Table(name = "tb_order")
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private LocalDateTime date;
-	
+
 	@ManyToOne
 	private Address deliveryaddress;
-	
+
 	@ManyToOne
 	private Client client;
-	
+
 	@OneToOne(mappedBy = "order")
 	private Payment payment;
+
+	@OneToMany
+	private List<OrderItem> orderItens = new ArrayList<>();
 	
+	private Integer orderStatus;
+
 	public Order() {
 	}
 
@@ -39,6 +49,7 @@ public class Order implements Serializable {
 		this.date = date;
 		this.client = client;
 		this.deliveryaddress = deliveryaddress;
+		this.orderStatus = OrderStatus.OPEN.getCod();
 	}
 
 	public Long getId() {
@@ -56,7 +67,7 @@ public class Order implements Serializable {
 	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
-	
+
 	public Client getClient() {
 		return client;
 	}
@@ -64,7 +75,7 @@ public class Order implements Serializable {
 	public void setClient(Client client) {
 		this.client = client;
 	}
-	
+
 	public Address getDeliveryaddress() {
 		return deliveryaddress;
 	}
@@ -76,7 +87,27 @@ public class Order implements Serializable {
 	public Payment getPayment() {
 		return payment;
 	}
+	
+	public OrderStatus getOrderStatus() {
+		return OrderStatus.orderStatusToEnum(orderStatus);
+	}
 
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus.getCod();
+	}
+
+	public Double getAmount() {
+		Double amount = 0.0;
+		for (OrderItem orderItem : orderItens) {
+			amount = amount + orderItem.getPrice();
+		}
+		return amount;
+	}
+
+	public List<OrderItem> getOrderItens() {
+		return orderItens;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -93,4 +124,5 @@ public class Order implements Serializable {
 		Order other = (Order) obj;
 		return Objects.equals(id, other.id);
 	}
+	
 }

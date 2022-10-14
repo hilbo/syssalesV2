@@ -12,6 +12,7 @@ import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Order;
+import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
 import com.system.syssalesv2.entities.PaymentWithCard;
 import com.system.syssalesv2.entities.PaymentWithTicket;
@@ -20,6 +21,7 @@ import com.system.syssalesv2.entities.State;
 import com.system.syssalesv2.entities.Telephone;
 import com.system.syssalesv2.entities.enums.StatePayment;
 import com.system.syssalesv2.entities.enums.TypeClient;
+import com.system.syssalesv2.repositories.OrderItemRepository;
 import com.system.syssalesv2.services.AddressService;
 import com.system.syssalesv2.services.CategoryService;
 import com.system.syssalesv2.services.CityService;
@@ -51,15 +53,18 @@ public class Cid implements CommandLineRunner {
 	@Autowired
 	private PaymentService paymentService;
 	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		
 		//Instanceament de Producties, Categories and associations.
-		Product product01 = new Product(null, "Produto01", 200.0);
+		Product product01 = new Product(null, "Produto01", 100.0);
 		productService.save(product01);
 		Product product02 = new Product(null, "Produto02", 300.0);
 		productService.save(product02);
-		Product product03 = new Product(null, "Produto02", 400.0);
+		Product product03 = new Product(null, "Produto03", 400.0);
 		productService.save(product03);
 		
 		Category category01 = new Category(null, "Category01");
@@ -115,6 +120,18 @@ public class Cid implements CommandLineRunner {
 		Payment pay02 = new PaymentWithTicket(null, StatePayment.PENDENTE, LocalDateTime.now(), order02);
 		paymentService.save(pay02);
 		
+		OrderItem orderItem01 = new OrderItem(null, order01, 0.0, 2, product01);
+		OrderItem orderItem02 = new OrderItem(null, order01, 10.0, 1, product01);
+		OrderItem orderItem03 = new OrderItem(null, order01, 50.0, 10, product01);
+		
+		orderItemRepository.save(orderItem01);
+		orderItemRepository.save(orderItem02);
+		orderItemRepository.save(orderItem03);
+		
+		order01.getOrderItens().add(orderItem01);
+		order01.getOrderItens().add(orderItem02);
+		order01.getOrderItens().add(orderItem03);
+		orderService.save(order01);
 		
 	}
 }
