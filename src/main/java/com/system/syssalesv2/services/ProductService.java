@@ -2,6 +2,8 @@ package com.system.syssalesv2.services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +19,14 @@ public class ProductService {
 		return productRepository.findAll();
 	}
 	
+	@Transactional
 	public Product save(Product product) {
 		return productRepository.save(product);
+	}
+	
+	@Transactional
+	public void saveAll(List<Product> producties){
+		productRepository.saveAll(producties);
 	}
 
 }
