@@ -1,12 +1,16 @@
 package com.system.syssalesv2.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.system.syssalesv2.DTO.ClientDTO;
@@ -31,11 +35,6 @@ public class ClientService {
 	@Autowired
 	TelephoneService telephoneService;
 
-	@Transactional
-	public Client save(Client client) {
-		return clientRepository.save(client);
-	}
-
 	public Client findById(Long id) {
 		try {
 			return clientRepository.findById(id).get();
@@ -45,7 +44,7 @@ public class ClientService {
 	}
 
 	@Transactional
-	public void saveDTO(ClientDTO clientDto) {
+	public ClientDTO saveDTO(ClientDTO clientDto) {
 		Validator validator = new Validation();
 		try {
 			Address address = new Address(null, clientDto.getAddress(), Integer.parseInt(clientDto.getNumber()),
@@ -86,9 +85,78 @@ public class ClientService {
 			validator.valid();
 
 			save(client);
+			return clientFromClientDTO(client);
 		} catch (ValidationException e) {
 			throw new ValidationExceptionService(e.getMessage(), validator.getError());
 		}
+	}
+		
+	public Page<ClientDTO> findPage(Pageable page) {
+		Page<Client> pageClient = clientRepository.findAll(page);
+		Page<ClientDTO> pageClientDTO = pageClient.map(x -> clientFromClientDTO(x));
+		return pageClientDTO;
+	}
+
+	@Transactional
+	public Client save(Client client) {
+		client.setId(null);
+		return clientRepository.save(client);
+	}
+
+	private ClientDTO clientFromClientDTO(Client client) {
+		List<Telephone> telephones = new ArrayList<>();
+		String telephone1 = "0";
+		String telephone2 = "0";
+		for (Telephone telephone : client.getTelephones()) {
+			telephones.add(telephone);
+		}
+		if (!telephones.isEmpty()) {
+			telephone1 = telephones.get(0).getNumber();
+		}
+		if (! telephones.isEmpty()) {
+			telephone2 = telephones.get(1).getNumber();
+		}
+						
+		List<Address> addresses = new ArrayList<>();
+		for (Address addressTmp : client.getAddresses()) {
+			addresses.add(addressTmp);
+		}
+		Address address2 = new Address();
+		address2 = addresses.get(0);
+		String address = addresses.get(0).getAddress();
+		String number = addresses.get(0).getNumber().toString();
+		String complement = addresses.get(0).getComplement();
+		String zipCod = addresses.get(0).getZipCode();
+		String cityId = cityService.findById(address2.getCity().getId()).getId().toString();
+						
+		ClientDTO clientDTO = new ClientDTO(client.getId()
+											, client.getName()
+											, client.getEmail()
+											, client.getCpfOrCnpj()
+											, client.getTypeClient().toString()
+											, telephone1
+											, telephone2
+											, address
+											, number
+											, complement
+											, zipCod
+											, cityId
+											);
+				
+		return clientDTO;
+	}
+
+	@Transactional
+	public void update(Long id, Client client) {
+		Client catTmp = findById(id);
+		if (!client.getName().equals(null)) {
+			catTmp.setName(client.getName());
+		}
+		clientRepository.save(catTmp);
+	}
+
+	public void delete(Long id) {
+		clientRepository.delete(findById(id));
 	}
 
 }

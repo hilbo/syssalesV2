@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class ClientDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private Long id;
 	private String name;
 	private String email;
 	private String cpfOrCnpj;
@@ -17,8 +18,12 @@ public class ClientDTO implements Serializable {
 	private String zipCod;
 	private String cityId;
 	
-	public ClientDTO(String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
+	public ClientDTO() {
+	}
+	
+	public ClientDTO(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
 			String address, String number, String complement, String zipCod, String cityId) {
+		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.cpfOrCnpj = cpfOrCnpj;
@@ -31,7 +36,7 @@ public class ClientDTO implements Serializable {
 		this.zipCod = zipCod;
 		this.cityId = cityId;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -118,6 +123,14 @@ public class ClientDTO implements Serializable {
 
 	public void setCityId(String cityId) {
 		this.cityId = cityId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 }

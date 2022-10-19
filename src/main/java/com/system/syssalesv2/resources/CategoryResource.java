@@ -1,7 +1,8 @@
 package com.system.syssalesv2.resources;
 
 import java.net.URI;
-import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,11 +33,6 @@ public class CategoryResource {
 	@Autowired
 	CategoryService categoryService;
 
-	@GetMapping
-	public ResponseEntity<List<CategoryDTO>> findAll() {
-		return ResponseEntity.ok().body(categoryService.findAll());
-	}
-
 	@GetMapping("/{id}")
 	public ResponseEntity<Category> findById(@PathVariable Long id) {
 		return ResponseEntity.ok().body(categoryService.findById(id));
@@ -48,9 +44,9 @@ public class CategoryResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> save(@RequestBody Category category) {
-		category = categoryService.save(category);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + category.getId()).build().toUri();
+	public ResponseEntity<Void> save(@RequestBody @Valid CategoryDTO categoryDTO) {
+		categoryDTO = categoryService.saveDTO(categoryDTO);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + categoryDTO.getId()).build().toUri();
 		return ResponseEntity.created(uri).build();
 	}
 

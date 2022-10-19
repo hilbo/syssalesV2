@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -50,7 +52,28 @@ public class ResourceExecption {
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
 		error.setError("BAD REQUEST");
 		error.setPath(request.getRequestURI());
-		error.setDefaultMessage(e.getMessage());
+		error.setDefaultMessage("Item associado à outra entidade !");
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<StandardException> MethodArgumentNotValidException (MethodArgumentNotValidException e, HttpServletRequest request) {
+		StandardException error = new StandardException();
+		SpecificException errors = new SpecificException();
+		
+		for (FieldError objError : e.getBindingResult().getFieldErrors()) {
+			errors.setError(objError.getCode());
+			errors.setDefaultMessage(objError.getDefaultMessage());
+			errors.setField(objError.getField());
+		}
+				
+		error.setTimestamp(LocalDateTime.now());
+		error.setStatus(HttpStatus.BAD_REQUEST.value());
+		error.setError("BAD REQUEST");
+		error.setPath(request.getRequestURI());
+		error.setDefaultMessage("Erro de Validação !");
+		error.getErros().add(errors);
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}

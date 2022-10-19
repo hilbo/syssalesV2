@@ -37,10 +37,10 @@ public class CategoryService {
 			throw new ServiceNoSuchElementException("Categoria não encontrada !");
 		}
 	}
-	
+
 	public Page<CategoryDTO> findPage(Pageable page) {
 		Page<Category> pageCategory = categoryRepository.findAll(page);
-		Page<CategoryDTO> pageCategoryDTO = pageCategory.map(x->new CategoryDTO(x));
+		Page<CategoryDTO> pageCategoryDTO = pageCategory.map(x -> new CategoryDTO(x));
 		return pageCategoryDTO;
 	}
 
@@ -48,6 +48,18 @@ public class CategoryService {
 	public Category save(Category category) {
 		category.setId(null);
 		return categoryRepository.save(category);
+	}
+
+	@Transactional
+	public CategoryDTO saveDTO(CategoryDTO categoryDTO) {
+		categoryDTO.setId(null);
+		return new CategoryDTO(categoryRepository.save(categoryDtoFromCategory(categoryDTO)));
+	}
+
+	private Category categoryDtoFromCategory(CategoryDTO categoryDTO) {
+		Category category = new Category();
+		category.setName(categoryDTO.getName());
+		return category;
 	}
 
 	@Transactional
