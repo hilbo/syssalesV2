@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.system.syssalesv2.DTO.ClientDTO;
+import com.system.syssalesv2.DTO.ClientDTOPage;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.serviceExecptions.ServiceDataIntegrityViolationException;
 import com.system.syssalesv2.services.ClientService;
@@ -39,7 +40,7 @@ public class ClientResource {
 	}
 	
 	@GetMapping("/page")
-	public ResponseEntity<Page<ClientDTO>> findPage(@PageableDefault(size = 10, sort = "name", direction = Direction.DESC) Pageable page){
+	public ResponseEntity<Page<ClientDTOPage>> findPage(@PageableDefault(size = 10, sort = "name", direction = Direction.DESC) Pageable page){
 		    return ResponseEntity.ok().body(clientService.findPage(page));
 	}
 

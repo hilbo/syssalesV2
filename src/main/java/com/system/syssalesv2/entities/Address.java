@@ -128,4 +128,5 @@ public class Address implements Serializable{
 	public void setClient(Client client) {
 		this.client = client;
 	}
+	
 }

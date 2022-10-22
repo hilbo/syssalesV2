@@ -14,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.system.syssalesv2.DTO.ClientDTO;
+import com.system.syssalesv2.DTO.ClientDTOPage;
 import com.system.syssalesv2.entities.Address;
+import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Telephone;
 import com.system.syssalesv2.entities.enums.TypeClient;
@@ -48,8 +50,7 @@ public class ClientService {
 		Validator validator = new Validation();
 		try {
 			Address address = new Address(null, clientDto.getAddress(), Integer.parseInt(clientDto.getNumber()),
-					clientDto.getComplement(), clientDto.getCityId(), clientDto.getZipCod(),
-					cityService.findById(Long.parseLong(clientDto.getCityId())));
+					clientDto.getComplement(), "", clientDto.getZipCod(), cityService.findById(Long.parseLong(clientDto.getCityId())));
 			addressService.save(address);
 
 			Telephone telephone1 = new Telephone(null, clientDto.getTelephone1());
@@ -61,7 +62,7 @@ public class ClientService {
 
 			validator.validBlanck(clientDto.getName(), "name");
 			client.setName(clientDto.getName());
-			
+
 			validator.validBlanck(clientDto.getEmail(), "email");
 			validator.validEmail(clientDto.getEmail(), "email");
 			client.setEmail(clientDto.getEmail());
@@ -81,6 +82,9 @@ public class ClientService {
 
 			client.getAddresses().add(address);
 			client.getTelephones().addAll(Arrays.asList(telephone1, telephone2));
+			
+			address.setClient(client);
+			addressService.save(address);
 
 			validator.valid();
 
@@ -90,11 +94,53 @@ public class ClientService {
 			throw new ValidationExceptionService(e.getMessage(), validator.getError());
 		}
 	}
-		
-	public Page<ClientDTO> findPage(Pageable page) {
+
+	public Page<ClientDTOPage> findPage(Pageable page) {
 		Page<Client> pageClient = clientRepository.findAll(page);
-		Page<ClientDTO> pageClientDTO = pageClient.map(x -> clientFromClientDTO(x));
-		return pageClientDTO;
+		Page<ClientDTOPage> pageClientDTOPage = pageClient.map(x -> clientFromClientDTOPage(x));
+		return pageClientDTOPage;
+	}
+
+	private ClientDTOPage clientFromClientDTOPage(Client client) {
+		List<Telephone> telephones = new ArrayList<>();
+		String telephone1 = "";
+		String telephone2 = "";
+		for (Telephone telephone : client.getTelephones()) {
+			telephones.add(telephone);
+		}
+		if (!telephones.isEmpty()) {
+			telephone1 = telephones.get(0).getNumber();
+		}
+		if (!telephones.isEmpty()) {
+			telephone2 = telephones.get(1).getNumber();
+		}
+
+		List<Address> addresses = new ArrayList<>();
+		for (Address addressTmp : client.getAddresses()) {
+			addresses.add(addressTmp);
+		}
+		Address addressP0 = new Address();
+		if (!addresses.isEmpty()) {
+			addressP0 = addresses.get(0);
+		}
+		String address = testNull(addressP0.getAddress());
+		String number = "";
+		if (addressP0.getNumber() != null) {
+			number = addressP0.getNumber().toString();
+		}
+		String complement = testNull(addressP0.getComplement());
+		String zipCod = testNull(addressP0.getZipCode());
+				
+		City city = new City();
+				
+		if (addressP0.getCity() != null) {
+			city = addressP0.getCity();
+		}
+				
+		ClientDTOPage clientDTOPage = new ClientDTOPage(client.getId(), client.getName(), client.getEmail(), client.getCpfOrCnpj(),
+				client.getTypeClient().toString(), telephone1, telephone2, address, number, complement, zipCod, city);
+
+		return clientDTOPage;
 	}
 
 	@Transactional
@@ -105,58 +151,136 @@ public class ClientService {
 
 	private ClientDTO clientFromClientDTO(Client client) {
 		List<Telephone> telephones = new ArrayList<>();
-		String telephone1 = "0";
-		String telephone2 = "0";
+		String telephone1 = "";
+		String telephone2 = "";
 		for (Telephone telephone : client.getTelephones()) {
 			telephones.add(telephone);
 		}
 		if (!telephones.isEmpty()) {
 			telephone1 = telephones.get(0).getNumber();
 		}
-		if (! telephones.isEmpty()) {
+		if (!telephones.isEmpty()) {
 			telephone2 = telephones.get(1).getNumber();
 		}
-						
+
 		List<Address> addresses = new ArrayList<>();
 		for (Address addressTmp : client.getAddresses()) {
 			addresses.add(addressTmp);
 		}
-		Address address2 = new Address();
-		address2 = addresses.get(0);
-		String address = addresses.get(0).getAddress();
-		String number = addresses.get(0).getNumber().toString();
-		String complement = addresses.get(0).getComplement();
-		String zipCod = addresses.get(0).getZipCode();
-		String cityId = cityService.findById(address2.getCity().getId()).getId().toString();
-						
-		ClientDTO clientDTO = new ClientDTO(client.getId()
-											, client.getName()
-											, client.getEmail()
-											, client.getCpfOrCnpj()
-											, client.getTypeClient().toString()
-											, telephone1
-											, telephone2
-											, address
-											, number
-											, complement
-											, zipCod
-											, cityId
-											);
+		Address addressP0 = new Address();
+		if (!addresses.isEmpty()) {
+			addressP0 = addresses.get(0);
+		}
+		String address = testNull(addressP0.getAddress());
+		String number = "";
+		if (addressP0.getNumber() != null) {
+			number = addressP0.getNumber().toString();
+		}
+		String complement = testNull(addressP0.getComplement());
+		String zipCod = testNull(addressP0.getZipCode());
+		String cityId = "";
+		if (addressP0.getCity() != null) {
+			cityId = addressP0.getCity().getId().toString();
+		}
 				
+		ClientDTO clientDTO = new ClientDTO(client.getId(), client.getName(), client.getEmail(), client.getCpfOrCnpj(),
+				client.getTypeClient().toString(), telephone1, telephone2, address, number, complement, zipCod, cityId);
+
 		return clientDTO;
+	}
+	
+	private String testNull(String str) {
+		if (str == null) {
+			str = "";
+		}
+		return str;
 	}
 
 	@Transactional
-	public void update(Long id, Client client) {
-		Client catTmp = findById(id);
-		if (!client.getName().equals(null)) {
-			catTmp.setName(client.getName());
-		}
-		clientRepository.save(catTmp);
+	public void update(Long id, Client obj) {
+		Client objTmp = findById(id);
+		objTmp = updatePrep(objTmp, obj);
+		clientRepository.save(objTmp);
 	}
 
+	private Client updatePrep(Client objTmp, Client obj) {
+		if (!obj.getName().equals(null)) {
+			objTmp.setName(obj.getName());
+		}
+		return objTmp;
+	}
+
+	@Transactional
 	public void delete(Long id) {
-		clientRepository.delete(findById(id));
+		Client obj = findById(id);
+		clientRepository.delete(obj);
+		deletePrep(obj);
+	}
+	
+	private void deletePrep(Client obj) {
+		for (Telephone objTmp : obj.getTelephones()) {
+			if (!objTmp.equals(null)) {
+				telephoneService.delete(objTmp.getId());
+			}
+		}
+		
+		for (Address objTmp : obj.getAddresses()) {
+			if (!objTmp.equals(null)) {
+				addressService.delete(objTmp.getId());
+			}
+		}
+		
+		
+	}
+
+	public Client clientDTOPageFromClient(ClientDTOPage clientDtoPage) {
+		Validator validator = new Validation();
+		try {
+			Address address = new Address(null, clientDtoPage.getAddress(), Integer.parseInt(clientDtoPage.getNumber()),
+					clientDtoPage.getComplement(), "", clientDtoPage.getZipCod(), cityService.findById(Long.parseLong(clientDtoPage.getCity())));
+			addressService.save(address);
+
+			Telephone telephone1 = new Telephone(null, clientDtoPage.getTelephone1());
+			Telephone telephone2 = new Telephone(null, clientDtoPage.getTelephone2());
+			telephoneService.save(telephone1);
+			telephoneService.save(telephone2);
+
+			Client client = new Client();
+
+			validator.validBlanck(clientDtoPage.getName(), "name");
+			client.setName(clientDtoPage.getName());
+
+			validator.validBlanck(clientDtoPage.getEmail(), "email");
+			validator.validEmail(clientDtoPage.getEmail(), "email");
+			client.setEmail(clientDtoPage.getEmail());
+
+			validator.validType(Integer.parseInt(clientDtoPage.getType()), "typeClient");
+			client.setTypeClient(TypeClient.typeClientToEnum(Integer.parseInt(clientDtoPage.getType())));
+
+			if (Integer.parseInt(clientDtoPage.getType()) == TypeClient.PESSOAFISICA.getCod()) {
+				validator.validBlanck(clientDtoPage.getCpfOrCnpj(), "cpfOrCnpj");
+				validator.validCPF(clientDtoPage.getCpfOrCnpj(), "cpfOrCnpj");
+				client.setCpfOrCnpj(clientDtoPage.getCpfOrCnpj());
+			}
+			if (Integer.parseInt(clientDtoPage.getType()) == TypeClient.PESSOAJURIDICA.getCod()) {
+				validator.validCNPJ(clientDtoPage.getCpfOrCnpj(), "cpfOrCnpj");
+				client.setCpfOrCnpj(clientDtoPage.getCpfOrCnpj());
+			}
+
+			client.getAddresses().add(address);
+			client.getTelephones().addAll(Arrays.asList(telephone1, telephone2));
+			
+			address.setClient(client);
+			addressService.save(address);
+
+			validator.valid();
+
+			save(client);
+			return client;
+		} catch (ValidationException e) {
+			throw new ValidationExceptionService(e.getMessage(), validator.getError());
+		}
+		
 	}
 
 }

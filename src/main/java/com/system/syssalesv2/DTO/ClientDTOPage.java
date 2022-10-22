@@ -2,7 +2,9 @@ package com.system.syssalesv2.DTO;
 
 import java.io.Serializable;
 
-public class ClientDTO implements Serializable {
+import com.system.syssalesv2.entities.City;
+
+public class ClientDTOPage implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
@@ -16,13 +18,13 @@ public class ClientDTO implements Serializable {
 	private String number;
 	private String complement;
 	private String zipCod;
-	private String cityId;
+	private String city;
 	
-	public ClientDTO() {
+	public ClientDTOPage() {
 	}
 	
-	public ClientDTO(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
-			String address, String number, String complement, String zipCod, String cityId) {
+	public ClientDTOPage(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
+			String address, String number, String complement, String zipCod, City city) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -34,7 +36,7 @@ public class ClientDTO implements Serializable {
 		this.number = number;
 		this.complement = complement;
 		this.zipCod = zipCod;
-		this.cityId = cityId;
+		this.city = city.getName();
 	}
 	
 	public Long getId() {
@@ -125,12 +127,12 @@ public class ClientDTO implements Serializable {
 		this.zipCod = zipCod;
 	}
 
-	public String getCityId() {
-		return cityId;
+	public String getCity() {
+		return city;
 	}
 		
-	public void setCityId(String cityId) {
-		this.cityId = cityId;
+	public void setCityId(String city) {
+		this.city = city;
 	}
 }
  

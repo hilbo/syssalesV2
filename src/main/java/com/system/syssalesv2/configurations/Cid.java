@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
+import com.system.syssalesv2.DTO.ClientDTO;
 import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.City;
-import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
@@ -20,7 +20,6 @@ import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.entities.State;
 import com.system.syssalesv2.entities.Telephone;
 import com.system.syssalesv2.entities.enums.StatePayment;
-import com.system.syssalesv2.entities.enums.TypeClient;
 import com.system.syssalesv2.repositories.OrderItemRepository;
 import com.system.syssalesv2.services.AddressService;
 import com.system.syssalesv2.services.CategoryService;
@@ -97,21 +96,16 @@ public class Cid implements CommandLineRunner {
 		telephoneService.save(telephone01);
 		telephoneService.save(telephone02);
 		
-		Client client01 = new Client(null, "Cliente01", "cliente01@email.com", "15357450889", TypeClient.PESSOAFISICA);
-		client01.getAddresses().add(address01);
-		//client01.getAddresses().add(address02);
-		client01.getTelephones().addAll(Arrays.asList(telephone01, telephone02));
-		clientService.save(client01);
+		ClientDTO clientDTO01 = new ClientDTO(null, "Client01", "client01@client01.com", "15357450889", "100", "11111111", "22222222", "Rua 1", "1", "Complemento", "09931340", city01.getId().toString());
+		clientDTO01 = clientService.saveDTO(clientDTO01);
 		
-		Client client02 = new Client(null, "Cliente02", "cliente01@email.com", "15357450889", TypeClient.PESSOAFISICA);
-		client02.getAddresses().add(address02);
-		//client01.getAddresses().add(address02);
-		clientService.save(client02);
+		ClientDTO clientDTO02 = new ClientDTO(null, "Client02", "client02@client02.com", "05396440000123", "200", "11111111", "22222222", "Rua 1", "1", "Complemento", "09931340", city02.getId().toString());
+		clientDTO02 = clientService.saveDTO(clientDTO02);
 		
-		Order order01 = new Order(null, LocalDateTime.now(), client01, address02);
+		Order order01 = new Order(null, LocalDateTime.now(), clientService.findById(clientDTO01.getId()), address02);
 		orderService.save(order01);
 		
-		Order order02 = new Order(null, LocalDateTime.now(), client01, address02);
+		Order order02 = new Order(null, LocalDateTime.now(), clientService.findById(clientDTO02.getId()), address02);
 		orderService.save(order02);
 		
 		Payment pay01 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order01);
