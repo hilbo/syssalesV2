@@ -12,11 +12,12 @@ import com.system.syssalesv2.validatories.Validator;
 import com.system.syssalesv2.validatories.checkers.IsCNPJ;
 import com.system.syssalesv2.validatories.checkers.IsCPF;
 import com.system.syssalesv2.validatories.checkers.IsEmail;
+import com.system.syssalesv2.validatories.checkers.IsTelephone;
 
 public class Validation implements Validator {
 
 	private StandardException error = new StandardException();
-	
+
 	public Validation() {
 	}
 
@@ -28,7 +29,7 @@ public class Validation implements Validator {
 	public void setError(StandardException error) {
 		this.error = error;
 	}
-	
+
 	@Override
 	public void validBlanck(String value, String field) {
 		SpecificException errorTmp = new SpecificException();
@@ -67,18 +68,18 @@ public class Validation implements Validator {
 			error.getErros().add(errorTmp);
 		}
 	}
-	
+
 	@Override
 	public void validType(Integer value, String field) {
 		SpecificException errorTmp = new SpecificException();
 		List<TypeClient> listTmp = new ArrayList<>();
-				
+
 		for (TypeClient typeClient : TypeClient.values()) {
 			if (value.equals(typeClient.getCod()) && value != 300) {
 				listTmp.add(typeClient);
 			}
 		}
-		
+
 		if (listTmp.isEmpty()) {
 			errorTmp.setDefaultMessage("Tipo de client inválido !");
 			errorTmp.setCodInternal(550);
@@ -88,7 +89,7 @@ public class Validation implements Validator {
 			error.getErros().add(errorTmp);
 		}
 	}
-	
+
 	@Override
 	public void validEmail(String value, String field) {
 		SpecificException errorTmp = new SpecificException();
@@ -100,13 +101,27 @@ public class Validation implements Validator {
 		if (!IsEmail.isValid(value)) {
 			error.getErros().add(errorTmp);
 		}
-	
+
 	}
-	
+
+	@Override
+	public void validTelephone(String value, String field) {
+		SpecificException errorTmp = new SpecificException();
+		errorTmp.setDefaultMessage("Telefone Inválido !");
+		errorTmp.setCodInternal(900);
+		errorTmp.setStatus(900);
+		errorTmp.setError("Ivalid Telephone !");
+		errorTmp.setField(field);
+		if (!IsTelephone.isValid(value)) {
+			error.getErros().add(errorTmp);
+		}
+	}
+
 	@Override
 	public void valid() {
 		if (!error.getErros().isEmpty()) {
 			throw new ValidationException("Erro de validação !");
 		}
 	}
+
 }

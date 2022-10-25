@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.system.syssalesv2.DTO.ClientDTO;
-import com.system.syssalesv2.DTO.ClientDTOPage;
+import com.system.syssalesv2.DTO.ClientInsertDTO;
+import com.system.syssalesv2.DTO.ClientPageDTO;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.serviceExecptions.ServiceDataIntegrityViolationException;
 import com.system.syssalesv2.services.ClientService;
@@ -40,14 +40,14 @@ public class ClientResource {
 	}
 	
 	@GetMapping("/page")
-	public ResponseEntity<Page<ClientDTOPage>> findPage(@PageableDefault(size = 10, sort = "name", direction = Direction.DESC) Pageable page){
+	public ResponseEntity<Page<ClientPageDTO>> findPage(@PageableDefault(size = 10, sort = "name", direction = Direction.DESC) Pageable page){
 		    return ResponseEntity.ok().body(clientService.findPage(page));
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> save(@RequestBody @Valid ClientDTO clientDTO) {
-		clientDTO = clientService.saveDTO(clientDTO);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + clientDTO.getId()).build().toUri();
+	public ResponseEntity<Void> save(@RequestBody @Valid ClientInsertDTO clientInsertDTO) {
+		ClientInsertDTO clientPageDTO = clientService.saveDTO(clientInsertDTO);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + clientPageDTO.getId()).build().toUri();
 		return ResponseEntity.created(uri).build();
 	}
 

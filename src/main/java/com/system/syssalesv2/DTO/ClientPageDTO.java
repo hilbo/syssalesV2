@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.system.syssalesv2.entities.City;
 
-public class ClientDTOPage implements Serializable {
+public class ClientPageDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
@@ -20,10 +20,10 @@ public class ClientDTOPage implements Serializable {
 	private String zipCod;
 	private String city;
 	
-	public ClientDTOPage() {
+	public ClientPageDTO() {
 	}
 	
-	public ClientDTOPage(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
+	public ClientPageDTO(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
 			String address, String number, String complement, String zipCod, City city) {
 		this.id = id;
 		this.name = name;

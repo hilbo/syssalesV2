@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
-import com.system.syssalesv2.DTO.ClientDTO;
+import com.system.syssalesv2.DTO.ClientInsertDTO;
 import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.City;
@@ -91,15 +91,15 @@ public class Cid implements CommandLineRunner {
 		Address address02 = new Address(null, "Rua Epiceia", 100, "Casa 2", "Jardim Ana Maria", "09931340", city01);
 		addressService.save(address02);
 		
-		Telephone telephone01 = new Telephone(null, "46818842");
-		Telephone telephone02 = new Telephone(null, "94600999");
+		Telephone telephone01 = new Telephone(null, "119468188421");
+		Telephone telephone02 = new Telephone(null, "119460099941");
 		telephoneService.save(telephone01);
 		telephoneService.save(telephone02);
 		
-		ClientDTO clientDTO01 = new ClientDTO(null, "Client01", "client01@client01.com", "15357450889", "100", "11111111", "22222222", "Rua 1", "1", "Complemento", "09931340", city01.getId().toString());
+		ClientInsertDTO clientDTO01 = new ClientInsertDTO(null, "Client01", "client01@client01.com", "15357450889", "100", telephone01.getNumber(), telephone02.getNumber(), "Rua 1", "1", "Complemento", "09931340", city01.getId().toString());
 		clientDTO01 = clientService.saveDTO(clientDTO01);
 		
-		ClientDTO clientDTO02 = new ClientDTO(null, "Client02", "client02@client02.com", "05396440000123", "200", "11111111", "22222222", "Rua 1", "1", "Complemento", "09931340", city02.getId().toString());
+		ClientInsertDTO clientDTO02 = new ClientInsertDTO(null, "Client02", "client02@client02.com", "05396440000123", "200", telephone01.getNumber(), telephone02.getNumber(), "Rua 1", "1", "Complemento", "09931340", city02.getId().toString());
 		clientDTO02 = clientService.saveDTO(clientDTO02);
 		
 		Order order01 = new Order(null, LocalDateTime.now(), clientService.findById(clientDTO01.getId()), address02);

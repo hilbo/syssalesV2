@@ -2,11 +2,13 @@ package com.system.syssalesv2.DTO;
 
 import java.io.Serializable;
 
-public class ClientDTO implements Serializable {
+public class ClientInsertDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	//@NotBlank(message = "É obrigatório o preenchimento do nome !")
 	private String name;
+	//@NotBlank(message = "É obrigatório o preenchimento do email !")
 	private String email;
 	private String cpfOrCnpj;
 	private String type;
@@ -18,10 +20,10 @@ public class ClientDTO implements Serializable {
 	private String zipCod;
 	private String cityId;
 	
-	public ClientDTO() {
+	public ClientInsertDTO() {
 	}
 	
-	public ClientDTO(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
+	public ClientInsertDTO(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
 			String address, String number, String complement, String zipCod, String cityId) {
 		this.id = id;
 		this.name = name;
