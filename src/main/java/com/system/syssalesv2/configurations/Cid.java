@@ -91,7 +91,7 @@ public class Cid implements CommandLineRunner {
 		Address address02 = new Address(null, "Rua Epiceia", 100, "Casa 2", "Jardim Ana Maria", "09931340", city01);
 		addressService.save(address02);
 		
-		Telephone telephone01 = new Telephone(null, "119468188421");
+		Telephone telephone01 = new Telephone(null, "119468188422");
 		Telephone telephone02 = new Telephone(null, "119460099941");
 		telephoneService.save(telephone01);
 		telephoneService.save(telephone02);
