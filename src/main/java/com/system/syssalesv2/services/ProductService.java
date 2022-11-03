@@ -1,31 +1,50 @@
 package com.system.syssalesv2.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.system.syssalesv2.DTO.ProductDTO;
+import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.repositories.ProductRepository;
 
 @Service
 public class ProductService {
 	@Autowired
-	ProductRepository productRepository;
-	
-	public List<Product> findAll() {
-		return productRepository.findAll();
+	private ProductRepository productRepository;
+	@Autowired
+	private CategoryService categoryService;
+
+	public Page<ProductDTO> findAll(Pageable page) {
+		Page<Product> producties = productRepository.findAll(page);
+		Page<ProductDTO> productiesDTO = producties.map(product -> new ProductDTO(product));
+		return productiesDTO;
 	}
-	
+
+	public Page<Product> findByNameAndCategories(String productName, List<String> categoriesIds, Pageable page) {
+		List<Category> categories = new ArrayList<>();
+		for (String categoryStr : categoriesIds) {
+			Category category = new Category();
+			category = categoryService.findById(Long.parseLong(categoryStr));
+			categories.add(category);
+		}
+		return productRepository.findByNameAndCategories(productName, categories, page);
+	}
+
 	@Transactional
 	public Product save(Product product) {
 		return productRepository.save(product);
 	}
-	
+
 	@Transactional
-	public void saveAll(List<Product> producties){
+	public void saveAll(List<Product> producties) {
 		productRepository.saveAll(producties);
 	}
 

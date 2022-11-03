@@ -19,7 +19,7 @@ import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 @Service
 public class CategoryService {
 	@Autowired
-	CategoryRepository categoryRepository;
+	private CategoryRepository categoryRepository;
 
 	public List<CategoryDTO> findAll() {
 		List<CategoryDTO> listCategoryDTO = new ArrayList<>();

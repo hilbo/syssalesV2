@@ -16,7 +16,7 @@ import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 @Service
 public class TelephoneService {
 	@Autowired
-	TelephoneRepository telephoneRepository;
+	private TelephoneRepository telephoneRepository;
 		
 	public List<Telephone> findAll(){
 		return telephoneRepository.findAll();

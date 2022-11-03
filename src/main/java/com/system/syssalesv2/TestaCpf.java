@@ -1,12 +1,16 @@
 package com.system.syssalesv2;
 
-import com.system.syssalesv2.validatories.checkers.IsEmail;
+import com.system.syssalesv2.services.ClientService;
 
 public class TestaCpf {
-	
+
 	public static void main(String[] args) {
+		ClientService cs = new ClientService();
 		
-		System.out.println(IsEmail.isValid("hilbo.vv@com.br"));
+		cs.findById(1L);
+		
+		
+		System.out.println(cs.findById(1L).getName());
 		
 	}	
 

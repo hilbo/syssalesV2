@@ -5,7 +5,10 @@ import java.util.List;
 
 import javax.validation.ValidationException;
 
+import org.springframework.stereotype.Service;
+
 import com.system.syssalesv2.entities.enums.TypeClient;
+import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.resourcesExecpitions.SpecificException;
 import com.system.syssalesv2.resourcesExecpitions.StandardException;
 import com.system.syssalesv2.validatories.Validator;
@@ -13,9 +16,8 @@ import com.system.syssalesv2.validatories.checkers.IsCNPJ;
 import com.system.syssalesv2.validatories.checkers.IsCPF;
 import com.system.syssalesv2.validatories.checkers.IsEmail;
 import com.system.syssalesv2.validatories.checkers.IsTelephone;
-
+@Service
 public class Validation implements Validator {
-
 	private StandardException error = new StandardException();
 
 	public Validation() {
@@ -116,6 +118,19 @@ public class Validation implements Validator {
 			error.getErros().add(errorTmp);
 		}
 	}
+	
+	@Override
+	public void validEmailReapt(String value, String field, ClientRepository clientRepository) {
+		SpecificException errorTmp = new SpecificException();
+		errorTmp.setDefaultMessage("Email já cadastrado !");
+		errorTmp.setCodInternal(999);
+		errorTmp.setStatus(999);
+		errorTmp.setError("Email exist !");
+		errorTmp.setField(field);
+		if (!clientRepository.findPerEmail(value).isEmpty()) {
+			error.getErros().add(errorTmp);
+		}
+	}
 
 	@Override
 	public void valid() {
@@ -123,5 +138,7 @@ public class Validation implements Validator {
 			throw new ValidationException("Erro de validação !");
 		}
 	}
+
+	
 
 }

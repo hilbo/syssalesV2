@@ -51,7 +51,6 @@ public class Cid implements CommandLineRunner {
 	private OrderService orderService;
 	@Autowired
 	private PaymentService paymentService;
-	
 	@Autowired
 	private OrderItemRepository orderItemRepository;
 	
@@ -61,7 +60,7 @@ public class Cid implements CommandLineRunner {
 		//Instanceament de Producties, Categories and associations.
 		Product product01 = new Product(null, "Produto01", 100.0);
 		productService.save(product01);
-		Product product02 = new Product(null, "Produto02", 300.0);
+		Product product02 = new Product(null, "Produto01", 300.0);
 		productService.save(product02);
 		Product product03 = new Product(null, "Produto03", 400.0);
 		productService.save(product03);
@@ -72,9 +71,10 @@ public class Cid implements CommandLineRunner {
 		categoryService.save(category02);
 				
 		product01.getCategories().add(category01);
-		product02.getCategories().add(category01);
+		product02.getCategories().add(category02);
+		product03.getCategories().add(category01);
 		
-		productService.saveAll(Arrays.asList(product01, product02));
+		productService.saveAll(Arrays.asList(product01, product02, product03));
 		
 		State state01 = new State(null, "SP");
 		stateService.save(state01);

@@ -14,7 +14,7 @@ import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 @Service
 public class OrderService {
 	@Autowired
-	OrderRepository orderRepository;
+	private OrderRepository orderRepository;
 		
 	public List<Order> findAll(){
 		return orderRepository.findAll();

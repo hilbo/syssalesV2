@@ -15,10 +15,10 @@ import com.system.syssalesv2.serviceExecptions.ServiceOrderAssociateException;
 @Service
 public class PaymentService {
 	@Autowired
-	PaymentRepository paymentRepository;
+	private PaymentRepository paymentRepository;
 	
 	@Autowired
-	OrderRepository orderRepository;
+	private OrderRepository orderRepository;
 		
 	public List<Payment> findAll(){
 		return paymentRepository.findAll();

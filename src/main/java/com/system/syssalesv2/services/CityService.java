@@ -10,7 +10,7 @@ import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 @Service
 public class CityService {
 	@Autowired
-	CityRepository clientRepository;
+	private CityRepository clientRepository;
 	
 	public City save(City client) {
 		return clientRepository.save(client);
