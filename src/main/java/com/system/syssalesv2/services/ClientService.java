@@ -52,8 +52,19 @@ public class ClientService {
 		return pageClientDTOPage;
 	}
 
-	public List<Client> findPerEmail(String email) {
-		return clientRepository.findPerEmail(email);
+	public List<Client> findPerEmail(String email, Pageable page) {
+		return clientRepository.findPerEmail(email, page);
+	}
+	
+	public Page<Client> findByCpfOrCnpj(String cpf, Pageable page) {
+		try {
+			if (clientRepository.findByCpfOrCnpj(cpf, null) == null) {
+				throw new NoSuchElementException();
+			}
+			return clientRepository.findByCpfOrCnpj(cpf, null);
+		} catch (NoSuchElementException e) {
+			throw new ServiceNoSuchElementException("Cliente não encontrado !!");
+		}
 	}
 
 	@Transactional
@@ -218,7 +229,7 @@ public class ClientService {
 			validator.validBlanck(obj.getName(), "name");
 			objTmp.setName(obj.getName());
 				
-			for (Client client : findPerEmail(obj.getEmail())) {
+			for (Client client : findPerEmail(obj.getEmail(), null)) {
 				if (client != null && client.equals(objTmp)) {
 					objTmp.setEmail(obj.getEmail());
 				}
@@ -260,6 +271,8 @@ public class ClientService {
 		}
 		return str;
 	}
+
+	
 
 	/*
 	public boolean emailExist(String email) {

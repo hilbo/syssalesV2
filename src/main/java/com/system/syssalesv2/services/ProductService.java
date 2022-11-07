@@ -2,6 +2,7 @@ package com.system.syssalesv2.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +15,7 @@ import com.system.syssalesv2.DTO.ProductDTO;
 import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.repositories.ProductRepository;
+import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 
 @Service
 public class ProductService {
@@ -26,6 +28,14 @@ public class ProductService {
 		Page<Product> producties = productRepository.findAll(page);
 		Page<ProductDTO> productiesDTO = producties.map(product -> new ProductDTO(product));
 		return productiesDTO;
+	}
+	
+	public Product findById(Long id) {
+		try {
+			return productRepository.findById(id).get();
+		} catch (NoSuchElementException e) {
+			throw new ServiceNoSuchElementException("Produto não encontrado !");
+		}
 	}
 
 	public Page<Product> findByNameAndCategories(String productName, List<String> categoriesIds, Pageable page) {

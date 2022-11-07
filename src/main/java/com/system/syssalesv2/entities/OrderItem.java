@@ -39,7 +39,11 @@ public class OrderItem implements Serializable {
 	public OrderItem(Long id, Order order, Double discount, Integer quantity, Product product) {
 		this.id = id;
 		this.order = order;
-		this.discount = discount;
+		if (discount == null) {
+			this.discount = 0.0;
+		}else {
+			this.discount = discount;
+		}
 		this.quantity = quantity;
 		this.product = product;
 		setPrice();
@@ -50,7 +54,11 @@ public class OrderItem implements Serializable {
 	}
 
 	public void setDiscount(Double discount) {
-		this.discount = discount;
+		if (discount == null) {
+			this.discount = 0.0;
+		}else {
+			this.discount = discount;
+		}
 	}
 
 	public Integer getQuantity() {

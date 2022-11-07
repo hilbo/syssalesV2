@@ -28,7 +28,7 @@ public class Order implements Serializable {
 	private LocalDateTime date;
 
 	@ManyToOne
-	private Address deliveryaddress;
+	private Address deliveryAddress;
 
 	@ManyToOne
 	private Client client;
@@ -44,11 +44,11 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, LocalDateTime date, Client client, Address deliveryaddress) {
+	public Order(Long id, LocalDateTime date, Client client, Address deliveryAddress) {
 		this.id = id;
 		this.date = date;
 		this.client = client;
-		this.deliveryaddress = deliveryaddress;
+		this.deliveryAddress = deliveryAddress;
 		this.orderStatus = OrderStatus.OPEN.getCod();
 	}
 
@@ -76,12 +76,12 @@ public class Order implements Serializable {
 		this.client = client;
 	}
 
-	public Address getDeliveryaddress() {
-		return deliveryaddress;
+	public Address getDeliveryAddress() {
+		return deliveryAddress;
 	}
 
-	public void setDeliveryaddress(Address deliveryaddress) {
-		this.deliveryaddress = deliveryaddress;
+	public void setDeliveryAddress(Address deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
 	}
 
 	public Payment getPayment() {
@@ -99,7 +99,7 @@ public class Order implements Serializable {
 	public Double getAmount() {
 		Double amount = 0.0;
 		for (OrderItem orderItem : orderItens) {
-			amount = amount + orderItem.getPrice();
+			amount = amount + orderItem.getAmount();
 		}
 		return amount;
 	}

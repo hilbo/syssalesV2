@@ -127,7 +127,7 @@ public class Validation implements Validator {
 		errorTmp.setStatus(999);
 		errorTmp.setError("Email exist !");
 		errorTmp.setField(field);
-		if (!clientRepository.findPerEmail(value).isEmpty()) {
+		if (!clientRepository.findPerEmail(value, null).isEmpty()) {
 			error.getErros().add(errorTmp);
 		}
 	}

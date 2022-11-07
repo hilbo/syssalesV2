@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -42,6 +43,12 @@ public class ClientResource {
 	@GetMapping("/page")
 	public ResponseEntity<Page<ClientPageDTO>> findPage(@PageableDefault(size = 10, sort = "name", direction = Direction.DESC) Pageable page){
 		    return ResponseEntity.ok().body(clientService.findPage(page));
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<Page<Client>> search(@RequestParam(value = "cpfOrCnpj") String cpfOrCnpj, Pageable page){
+		clientService.findByCpfOrCnpj(cpfOrCnpj, page);
+		return ResponseEntity.ok(clientService.findByCpfOrCnpj(cpfOrCnpj, page));
 	}
 
 	@PostMapping
