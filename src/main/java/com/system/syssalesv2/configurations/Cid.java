@@ -12,14 +12,12 @@ import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Order;
-import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
-import com.system.syssalesv2.entities.PaymentWithCard;
-import com.system.syssalesv2.entities.PaymentWithTicket;
 import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.entities.State;
 import com.system.syssalesv2.entities.Telephone;
-import com.system.syssalesv2.entities.enums.StatePayment;
+import com.system.syssalesv2.entities.enums.PaymentState;
+import com.system.syssalesv2.entities.enums.PaymentType;
 import com.system.syssalesv2.repositories.OrderItemRepository;
 import com.system.syssalesv2.services.AddressService;
 import com.system.syssalesv2.services.CategoryService;
@@ -102,16 +100,29 @@ public class Cid implements CommandLineRunner {
 		ClientInsertDTO clientDTO02 = new ClientInsertDTO(null, "Client02", "client02@client02.com", "05396440000123", "200", telephone01.getNumber(), telephone02.getNumber(), "Rua 1", "1", "Complemento", "09931340", city02.getId().toString());
 		clientDTO02 = clientService.saveDTO(clientDTO02);
 		
-		Order order01 = new Order(null, LocalDateTime.now(), clientService.findById(clientDTO01.getId()), address02);
+		Order order01 = new Order();
 		orderService.save(order01);
 		
+		Payment pay01 = new Payment(null, 2, LocalDateTime.now(), LocalDateTime.now(), 200.0, PaymentState.PENDENTE, PaymentType.CARTAO, order01);
+		paymentService.save(pay01);
+		Payment pay02 = new Payment(null, 4, LocalDateTime.now(), LocalDateTime.now(), 300.0, PaymentState.QUITADO, PaymentType.BOLETO, order01);
+		paymentService.save(pay02);
+				
+		order01.setDate(LocalDateTime.now());
+		//order01.setClient(clientService.findById(clientDTO01.getId()));
+		order01.setDeliveryAddress(address02);
+		order01.getPayments().addAll(Arrays.asList(pay01, pay02));
+				
+		orderService.update(order01);
+		
+		/*
 		Order order02 = new Order(null, LocalDateTime.now(), clientService.findById(clientDTO02.getId()), address02);
 		orderService.save(order02);
 		
-		Payment pay01 = new PaymentWithCard(null, StatePayment.PENDENTE, 2, order01);
+		Payment pay01 = new PaymentWithCard(null, PaymentState.PENDENTE, 2, order01);
 		paymentService.save(pay01);
 		
-		Payment pay02 = new PaymentWithTicket(null, StatePayment.PENDENTE, LocalDateTime.now(), order02);
+		Payment pay02 = new PaymentWithTicket(null, PaymentState.PENDENTE, LocalDateTime.now(), order02);
 		paymentService.save(pay02);
 		
 		OrderItem orderItem01 = new OrderItem(null, order01, 0.0, 2, product01);
@@ -126,6 +137,6 @@ public class Cid implements CommandLineRunner {
 		order01.getOrderItens().add(orderItem02);
 		order01.getOrderItens().add(orderItem03);
 		orderService.save(order01);
-		
+		*/
 	}
 }

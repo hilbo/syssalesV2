@@ -1,6 +1,6 @@
 package com.system.syssalesv2.entities.enums;
 
-public enum TypeClient {
+public enum ClientType {
 
 	PESSOAFISICA(100, "Pessoa Física"), 
 	PESSOAJURIDICA(200, "Pessoa Jurídica"),
@@ -9,7 +9,7 @@ public enum TypeClient {
 	private Integer cod;
 	private String descript;
 
-	private TypeClient(Integer cod, String descript) {
+	private ClientType(Integer cod, String descript) {
 		this.cod = cod;
 		this.descript = descript;
 	}
@@ -30,13 +30,13 @@ public enum TypeClient {
 		this.descript = descript;
 	}
 
-	public static TypeClient typeClientToEnum(Integer cod) {
-		for (TypeClient typeClient : TypeClient.values()) {
-			if (cod.equals(typeClient.getCod())) {
-				return typeClient;
+	public static ClientType typeClientToEnum(Integer cod) {
+		for (ClientType clientType : ClientType.values()) {
+			if (cod.equals(clientType.getCod())) {
+				return clientType;
 			}
 		}
-		return TypeClient.NAOIDENTIFICADO;
+		return ClientType.NAOIDENTIFICADO;
 	}
 
 }

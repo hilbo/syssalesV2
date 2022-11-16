@@ -1,5 +1,7 @@
 package com.system.syssalesv2.services;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,7 @@ import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Client;
 import com.system.syssalesv2.entities.Telephone;
-import com.system.syssalesv2.entities.enums.TypeClient;
+import com.system.syssalesv2.entities.enums.ClientType;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 import com.system.syssalesv2.validatories.Validator;
@@ -36,13 +38,15 @@ public class ClientService {
 	private AddressService addressService;
 	@Autowired
 	private TelephoneService telephoneService;
-	
 
 	public Client findById(Long id) {
 		try {
+			if (id == null) {
+				throw new NoSuchElementException();
+			}
 			return clientRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException("Cliente não encontrado !");
+			throw new ServiceNoSuchElementException("Cliente não encontrado !", "client");
 		}
 	}
 
@@ -52,18 +56,59 @@ public class ClientService {
 		return pageClientDTOPage;
 	}
 
-	public List<Client> findPerEmail(String email, Pageable page) {
-		return clientRepository.findPerEmail(email, page);
-	}
-	
-	public Page<Client> findByCpfOrCnpj(String cpf, Pageable page) {
+	public Page<Client> findPerEmail(String email, Pageable page) {
 		try {
-			if (clientRepository.findByCpfOrCnpj(cpf, null) == null) {
+			if (clientRepository.findPerEmail(email, page).isEmpty()) {
 				throw new NoSuchElementException();
 			}
-			return clientRepository.findByCpfOrCnpj(cpf, null);
+			return clientRepository.findPerEmail(email, page);
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException("Cliente não encontrado !!");
+			throw new ServiceNoSuchElementException("Cliente não encontrado !!", "email");
+		}
+	}
+
+	public Page<Client> findByCpfOrCnpj(String cpfOrCnpj, Pageable page) {
+		try {
+			if (clientRepository.findByCpfOrCnpj(cpfOrCnpj, page).isEmpty()) {
+				throw new NoSuchElementException();
+			}
+			return clientRepository.findByCpfOrCnpj(cpfOrCnpj, page);
+		} catch (NoSuchElementException e) {
+			throw new ServiceNoSuchElementException("Cliente não encontrado !!", "cpfOrCnpj");
+		}
+	}
+
+	public Page<Client> findByAttribut(String attribut, String value, Pageable page) {
+		try {
+			String path = "com.system.syssalesv2.entities.";
+			String cls = "Client";
+			Class<?> clsTmp = Class.forName(path + cls);
+			clsTmp.getDeclaredConstructor().newInstance();
+
+			List<Field> fields = new ArrayList<>();
+			fields = Arrays.asList(clsTmp.getDeclaredFields());
+
+			Page<Client> pageClient = null;
+
+			for (Field field : fields) {
+				if (field.getName().equals(attribut) && field.getName().equals("cpfOrCnpj")) {
+					pageClient = findByCpfOrCnpj(value, page);
+				}
+				if (field.getName().equals(attribut) && field.getName().equals("email")) {
+					pageClient = findPerEmail(value, page);
+				}
+			}
+
+			if (pageClient == null) {
+				throw new NoSuchMethodException("Atributo não encontrado !!");
+			}
+
+			return pageClient;
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | SecurityException e1) {
+			throw new RuntimeException(e1.getMessage());
+		} catch (NoSuchMethodException e2) {
+			throw new ServiceNoSuchElementException(e2.getMessage(), attribut);
 		}
 	}
 
@@ -103,14 +148,14 @@ public class ClientService {
 
 			validator.validBlanck(clientDto.getType(), "typeClient");
 			validator.validType(Integer.parseInt(clientDto.getType()), "typeClient");
-			client.setTypeClient(TypeClient.typeClientToEnum(Integer.parseInt(clientDto.getType())));
+			client.setTypeClient(ClientType.typeClientToEnum(Integer.parseInt(clientDto.getType())));
 
-			if (Integer.parseInt(clientDto.getType()) == TypeClient.PESSOAFISICA.getCod()) {
+			if (Integer.parseInt(clientDto.getType()) == ClientType.PESSOAFISICA.getCod()) {
 				validator.validBlanck(clientDto.getCpfOrCnpj(), "cpfOrCnpj");
 				validator.validCPF(clientDto.getCpfOrCnpj(), "cpfOrCnpj");
 				client.setCpfOrCnpj(clientDto.getCpfOrCnpj());
 			}
-			if (Integer.parseInt(clientDto.getType()) == TypeClient.PESSOAJURIDICA.getCod()) {
+			if (Integer.parseInt(clientDto.getType()) == ClientType.PESSOAJURIDICA.getCod()) {
 				validator.validBlanck(clientDto.getCpfOrCnpj(), "cpfOrCnpj");
 				validator.validCNPJ(clientDto.getCpfOrCnpj(), "cpfOrCnpj");
 				client.setCpfOrCnpj(clientDto.getCpfOrCnpj());
@@ -228,7 +273,7 @@ public class ClientService {
 		try {
 			validator.validBlanck(obj.getName(), "name");
 			objTmp.setName(obj.getName());
-				
+
 			for (Client client : findPerEmail(obj.getEmail(), null)) {
 				if (client != null && client.equals(objTmp)) {
 					objTmp.setEmail(obj.getEmail());
@@ -272,16 +317,9 @@ public class ClientService {
 		return str;
 	}
 
-	
-
 	/*
-	public boolean emailExist(String email) {
-		List<Client> clienties = new ArrayList<>();
-		clienties.addAll(clientRepository.findPerEmail(email));
-		if (clienties.isEmpty()) {
-			return false;
-		}
-		return true;
-	}
-	*/
+	 * public boolean emailExist(String email) { List<Client> clienties = new
+	 * ArrayList<>(); clienties.addAll(clientRepository.findPerEmail(email)); if
+	 * (clienties.isEmpty()) { return false; } return true; }
+	 */
 }

@@ -28,7 +28,7 @@ public class AddressService {
 		try {
 			return addressRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException("Endereço não encontrado !");
+			throw new ServiceNoSuchElementException("Endereço não encontrado !", "Address");
 		}
 	}
 	

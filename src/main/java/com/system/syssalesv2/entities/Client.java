@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.system.syssalesv2.entities.enums.TypeClient;
+import com.system.syssalesv2.entities.enums.ClientType;
 
 @Entity
 @Table(name = "tb_client")
@@ -46,12 +46,12 @@ public class Client implements Serializable{
 	public Client() {
 	}
 
-	public Client(Long id, String name, String email, String cpfOrCnpj, TypeClient typeClient) {
+	public Client(Long id, String name, String email, String cpfOrCnpj, ClientType clientType) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.cpfOrCnpj = cpfOrCnpj;
-		this.typeClient = typeClient.getCod();
+		this.typeClient = clientType.getCod();
 	}
 
 	public Long getId() {
@@ -86,12 +86,12 @@ public class Client implements Serializable{
 		this.cpfOrCnpj = cpfOrCnpj;
 	}
 
-	public TypeClient getTypeClient() {
-		return TypeClient.typeClientToEnum(typeClient);
+	public ClientType getTypeClient() {
+		return ClientType.typeClientToEnum(typeClient);
 	}
 
-	public void setTypeClient(TypeClient typeClient) {
-		this.typeClient = typeClient.getCod();
+	public void setTypeClient(ClientType clientType) {
+		this.typeClient = clientType.getCod();
 	}
 	
 	public Set<Address> getAddresses() {

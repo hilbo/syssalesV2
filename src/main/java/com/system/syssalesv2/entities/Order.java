@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.system.syssalesv2.entities.enums.OrderStatus;
@@ -33,8 +32,8 @@ public class Order implements Serializable {
 	@ManyToOne
 	private Client client;
 
-	@OneToOne(mappedBy = "order")
-	private Payment payment;
+	@OneToMany
+	private List<Payment> payments = new ArrayList<>();
 
 	@OneToMany
 	private List<OrderItem> orderItens = new ArrayList<>();
@@ -44,12 +43,14 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, LocalDateTime date, Client client, Address deliveryAddress) {
+	public Order(Long id, LocalDateTime date, Client client, Address deliveryAddress, Payment payment) {
 		this.id = id;
 		this.date = date;
 		this.client = client;
 		this.deliveryAddress = deliveryAddress;
 		this.orderStatus = OrderStatus.OPEN.getCod();
+		getPayments().add(payment);
+		
 	}
 
 	public Long getId() {
@@ -83,11 +84,7 @@ public class Order implements Serializable {
 	public void setDeliveryAddress(Address deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
-
-	public Payment getPayment() {
-		return payment;
-	}
-	
+		
 	public OrderStatus getOrderStatus() {
 		return OrderStatus.orderStatusToEnum(orderStatus);
 	}
@@ -108,6 +105,11 @@ public class Order implements Serializable {
 		return orderItens;
 	}
 	
+		
+	public List<Payment> getPayments() {
+		return payments;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

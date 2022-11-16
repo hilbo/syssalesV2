@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import javax.transaction.Transactional;
+import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.system.syssalesv2.DTO.OrderInserDTO;
 import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.OrderItem;
-import com.system.syssalesv2.entities.enums.OrderStatus;
+import com.system.syssalesv2.entities.Payment;
 import com.system.syssalesv2.repositories.OrderRepository;
 import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
+import com.system.syssalesv2.validatories.Validator;
+import com.system.syssalesv2.validatories.execptions.ValidationExceptionService;
+import com.system.syssalesv2.validatories.implementations.Validation;
 
 @Service
 public class OrderService {
@@ -26,6 +31,8 @@ public class OrderService {
 	private OrderItemService orderItemService;
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private PaymentService paymentService;
 
 	public List<Order> findAll() {
 		return orderRepository.findAll();
@@ -35,7 +42,7 @@ public class OrderService {
 		try {
 			return orderRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException("Pedido não encontrado !");
+			throw new ServiceNoSuchElementException("Pedido não encontrado !", "order");
 		}
 	}
 
@@ -46,14 +53,71 @@ public class OrderService {
 	}
 
 	@Transactional
-	public void insert(Order order) {
+	public Order insert(OrderInserDTO orderInsertDto) {
 		try {
+			Order order = new Order();
+			save(order);
+
+			order.setClient(clientService.findById(Long.parseLong(orderInsertDto.getClientId())));
+			order.setDate(LocalDateTime.now());
+
+			for (Address address : order.getClient().getAddresses()) {
+				if (address.getId().equals(Long.parseLong(orderInsertDto.getDeliveryAddressId()))) {
+					order.setDeliveryAddress(address);
+				}
+				if (!address.getId().equals((Long.parseLong(orderInsertDto.getDeliveryAddressId())))) {
+					throw new NoSuchElementException("Endereço de entrega não informado ou não encontrado !");
+				}
+			}
+			
+			for (OrderItem orderItem : orderInsertDto.getOrderItens()) {
+				orderItem.setQuantity(orderItem.getQuantity());	
+				orderItem.setDiscount(orderItem.getDiscount());				
+				orderItem.setProduct(productService.findById(orderItem.getProduct().getId()));
+				orderItem.setOrder(order);
+				orderItem.setPrice();
+				order.getOrderItens().add(orderItemService.insert(orderItem));
+			}
+
+			Double paymentAmount = 0.0;
+			for (Payment payment : orderInsertDto.getPayments()) {
+				payment.setPaymentState(payment.getPaymentState());
+				payment.setOrder(order);
+				order.getPayments().add(paymentService.save(payment));
+				paymentAmount = paymentAmount + payment.getPaymentValue();
+			}
+			update(order);
+			return order;
+		} catch (NoSuchElementException e) {
+			throw new ServiceNoSuchElementException(e.getMessage(), "");
+		}
+
+	}
+
+	public void update(Order order) {
+		orderRepository.save(order);
+	}
+
+	@Transactional
+	public Order insert2(Order order, String str) {
+
+		Validator validator = new Validation();
+
+		try {
+			validator.validOrderInsert(order);
+
 			Order orderTmp = new Order();
 			save(orderTmp);
-			orderTmp.setDate(LocalDateTime.now());
-			orderTmp.setClient(clientService.findById(order.getClient().getId()));
 
-			for (Address address : orderTmp.getClient().getAddresses()) {
+			if (str.equals("1")) {
+				// orderTmp.setPayment(paymentService.save(new PaymentWithCard(null,
+				// PaymentState.PENDENTE, 2, orderTmp)));
+			}
+
+			orderTmp.setClient(clientService.findById(order.getClient().getId()));
+			orderTmp.setDate(LocalDateTime.now());
+
+			for (Address address : clientService.findById(order.getClient().getId()).getAddresses()) {
 				if (address.getId() == (order.getDeliveryAddress().getId())) {
 					orderTmp.setDeliveryAddress(address);
 				}
@@ -62,19 +126,19 @@ public class OrderService {
 				}
 			}
 
-			orderTmp.setOrderStatus(OrderStatus.OPEN);
-			
 			for (OrderItem orderItem : order.getOrderItens()) {
-				//OrderItem oiTmp = new OrderItem(null, orderTmp, orderItem.getDiscount(), orderItem.getQuantity(), productService.findById(orderItem.getProduct().getId()));
 				orderItem.setProduct(productService.findById(orderItem.getProduct().getId()));
 				orderItem.setOrder(orderTmp);
 				orderItem.setPrice();
 				orderTmp.getOrderItens().add(orderItemService.save(orderItem));
 			}
-			
-			save(orderTmp);
+
+			return save(orderTmp);
+		} catch (ValidationException e) {
+			throw new ValidationExceptionService(e.getMessage(), validator.getError());
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException(e.getMessage());
+			throw new ServiceNoSuchElementException(e.getMessage(), "");
 		}
+
 	}
 }

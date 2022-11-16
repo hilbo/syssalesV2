@@ -46,11 +46,11 @@ public class ClientResource {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<Page<Client>> search(@RequestParam(value = "cpfOrCnpj") String cpfOrCnpj, Pageable page){
-		clientService.findByCpfOrCnpj(cpfOrCnpj, page);
-		return ResponseEntity.ok(clientService.findByCpfOrCnpj(cpfOrCnpj, page));
+	public ResponseEntity<Page<Client>> search(@RequestParam(value = "attribut") String attribut, @RequestParam(value = "value") String value, Pageable page){
+		clientService.findByAttribut(attribut, value, page);
+		return ResponseEntity.ok(clientService.findByAttribut(attribut, value, page));
 	}
-
+	
 	@PostMapping
 	public ResponseEntity<Void> save(@RequestBody @Valid ClientInsertDTO clientInsertDTO) {
 		ClientInsertDTO clientPageDTO = clientService.saveDTO(clientInsertDTO);

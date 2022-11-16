@@ -26,7 +26,7 @@ public class TelephoneService {
 		try {
 			return telephoneRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException("Telefone não encontrado !");
+			throw new ServiceNoSuchElementException("Telefone não encontrado !", "Telephone");
 		}
 	}
 	

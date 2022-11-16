@@ -30,6 +30,9 @@ public enum OrderStatus {
 	}
 	
 	public static OrderStatus orderStatusToEnum(Integer cod) {
+		if (cod == null) {
+			cod = 0;
+		}
 		for (OrderStatus orderStatus : OrderStatus.values()) {
 			if (cod.equals(orderStatus.getCod())) {
 				return orderStatus;

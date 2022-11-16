@@ -34,7 +34,7 @@ public class ProductService {
 		try {
 			return productRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException("Produto não encontrado !");
+			throw new ServiceNoSuchElementException("Produto não encontrado !", "Product");
 		}
 	}
 

@@ -2,6 +2,8 @@ package com.system.syssalesv2.services;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +26,9 @@ public class PaymentService {
 		return paymentRepository.findAll();
 	}
 	
+	@Transactional
 	public Payment save(Payment payment) {
-		 try {
-			 findPerOrder(payment.getOrder().getId());
-			 return paymentRepository.save(payment);
-		} catch (ServiceOrderAssociateException e) {
-			throw new ServiceOrderAssociateException(e.getMessage());
-		}
+		  return paymentRepository.save(payment);
 	}
 
 	private void findPerOrder(Long orderId) {

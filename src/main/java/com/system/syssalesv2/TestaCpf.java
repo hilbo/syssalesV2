@@ -1,17 +1,28 @@
 package com.system.syssalesv2;
 
-import com.system.syssalesv2.services.ClientService;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 
 public class TestaCpf {
 
-	public static void main(String[] args) {
-		ClientService cs = new ClientService();
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Class<?> obj = Class.forName ("com.system.syssalesv2.entities.Client");
+		obj.getConstructor().newInstance();
+				
+		Field fieldlist[] = obj.getDeclaredFields();
+		for(Field f : fieldlist) {
+			System.out.println(f.getName());
+		}
 		
-		cs.findById(1L);
+		System.out.println("###########################################################");
+		
+		Method mets[] = obj.getDeclaredMethods();
+		for(Method met : mets) {
+			System.out.println(met.getName());
+		}
 		
 		
-		System.out.println(cs.findById(1L).getName());
-		
-	}	
-
+	}
 }

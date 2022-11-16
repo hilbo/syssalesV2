@@ -34,7 +34,7 @@ public class CategoryService {
 		try {
 			return categoryRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException("Categoria não encontrada !");
+			throw new ServiceNoSuchElementException("Categoria não encontrada !", "Categoria");
 		}
 	}
 

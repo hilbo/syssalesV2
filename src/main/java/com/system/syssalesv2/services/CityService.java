@@ -20,7 +20,7 @@ public class CityService {
 		try {
 			return clientRepository.findById(id).get();
 		} catch (Exception e) {
-			throw new ServiceNoSuchElementException("Cidade não encontrado !");
+			throw new ServiceNoSuchElementException("Cidade não encontrado !", "City");
 		}
 	}
 }

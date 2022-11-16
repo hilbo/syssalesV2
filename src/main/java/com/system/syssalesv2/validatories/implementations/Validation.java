@@ -7,7 +7,8 @@ import javax.validation.ValidationException;
 
 import org.springframework.stereotype.Service;
 
-import com.system.syssalesv2.entities.enums.TypeClient;
+import com.system.syssalesv2.entities.Order;
+import com.system.syssalesv2.entities.enums.ClientType;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.resourcesExecpitions.SpecificException;
 import com.system.syssalesv2.resourcesExecpitions.StandardException;
@@ -74,11 +75,11 @@ public class Validation implements Validator {
 	@Override
 	public void validType(Integer value, String field) {
 		SpecificException errorTmp = new SpecificException();
-		List<TypeClient> listTmp = new ArrayList<>();
+		List<ClientType> listTmp = new ArrayList<>();
 
-		for (TypeClient typeClient : TypeClient.values()) {
-			if (value.equals(typeClient.getCod()) && value != 300) {
-				listTmp.add(typeClient);
+		for (ClientType clientType : ClientType.values()) {
+			if (value.equals(clientType.getCod()) && value != 300) {
+				listTmp.add(clientType);
 			}
 		}
 
@@ -131,6 +132,31 @@ public class Validation implements Validator {
 			error.getErros().add(errorTmp);
 		}
 	}
+	
+	@Override
+	public void notNullEntite(Object obj, String field) {
+		SpecificException errorTmp = new SpecificException();
+		errorTmp.setDefaultMessage("Entidade não pode nula !");
+		errorTmp.setCodInternal(999);
+		errorTmp.setStatus(999);
+		errorTmp.setError("notNull !");
+		errorTmp.setField(field);
+		if (obj == null) {
+			error.getErros().add(errorTmp);
+		}
+	}
+	
+	@Override
+	public void validOrderInsert(Order order) {
+		notNullEntite(order.getClient(), "order.client");
+		notNullEntite(order.getDeliveryAddress(), "order.deliveryAddress");
+		notNullEntite(order.getOrderItens(), "order.orderItens");
+		if (order.getOrderItens().isEmpty()) {
+			validBlanck("", "order.orderItens");
+		}
+										
+		valid();
+	}
 
 	@Override
 	public void valid() {
@@ -138,7 +164,4 @@ public class Validation implements Validator {
 			throw new ValidationException("Erro de validação !");
 		}
 	}
-
-	
-
 }

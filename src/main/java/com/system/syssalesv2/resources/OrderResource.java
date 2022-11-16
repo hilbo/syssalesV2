@@ -1,5 +1,7 @@
 package com.system.syssalesv2.resources;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.system.syssalesv2.DTO.OrderInserDTO;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.services.OrderService;
 
@@ -25,10 +29,11 @@ public class OrderResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody Order order){
-		orderService.insert(order);
-		
-		return null;
+	public ResponseEntity<Void> insert(@RequestBody OrderInserDTO order){
+		Order order2 = new Order();
+		order2 = orderService.insert(order);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + order2.getId()).build().toUri();
+		return ResponseEntity.created(uri).build();
 	}
 
 }
