@@ -4,7 +4,7 @@ import javax.validation.ValidationException;
 
 import org.springframework.stereotype.Service;
 
-import com.system.syssalesv2.entities.Order;
+import com.system.syssalesv2.DTO.OrderInserDTO;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.resourcesExecpitions.SpecificException;
 import com.system.syssalesv2.resourcesExecpitions.StandardException;
@@ -17,18 +17,30 @@ public class ValidationOrderInsert implements Validator {
 	}
 	
 	@Override
-	public void validOrderInsert(Order order) {
+	public void validOrderInsert(OrderInserDTO orderInsertDto) {
 		SpecificException errorTmp = new SpecificException();
 		errorTmp.setDefaultMessage("Cliente não pode ser nulo valid !");
 		errorTmp.setCodInternal(300);
 		errorTmp.setStatus(300);
 		errorTmp.setError("Cliente não pode ser nulo valid !");
-		//errorTmp.setField(field);
+		errorTmp.setField("order.client");
 				
-		if (order.getClient() == null) {
+		if (orderInsertDto.getClientId() == null) {
 			error.getErros().add(errorTmp);
 		}
-		//valid();
+		
+		SpecificException errorTmp2 = new SpecificException();
+		errorTmp2.setDefaultMessage("Pagamento não pode ser nulo !");
+		errorTmp2.setCodInternal(334300);
+		errorTmp2.setStatus(334300);
+		errorTmp2.setError("Pagamento não pode ser nulo !");
+		errorTmp2.setField("order.payments");
+				
+		if (orderInsertDto.getPayments().isEmpty()) {
+			error.getErros().add(errorTmp2);
+		}
+		
+		valid();
 				
 	}
 
@@ -80,12 +92,14 @@ public class ValidationOrderInsert implements Validator {
 		
 	}
 
-	
-
 	@Override
 	public StandardException getError() {
-		// TODO Auto-generated method stub
-		return null;
+		return error;
+	}
+
+	@Override
+	public void setError(StandardException error) {
+		this.error = error;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
 
+
 public class OrderInserDTO implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	
@@ -19,12 +20,9 @@ public class OrderInserDTO implements Serializable  {
 	public OrderInserDTO() {
 	}
 	
-	public OrderInserDTO(Order order) {
+	public OrderInserDTO(Order order, Object paymentType, Object statePaymentId, Object numberStallments) {
 		this.clientId = order.getClient().getId().toString();
-		//this.deliveryAddressId = order.getClient().getAddresses().;
-		//this.PaymentType = paymentType;
-		//this.statePaymentId = statePaymentId;
-		//this.numberStallments = numberStallments;
+		this.deliveryAddressId = order.getClient().getAddresses().toString();
 	}
 
 	public OrderInserDTO(String clientId, String deliveryAddressId, Payment payment) {
@@ -49,14 +47,12 @@ public class OrderInserDTO implements Serializable  {
 		this.deliveryAddressId = deliveryAddressId;
 	}
 
-	public List<Payment> getPayments() {
-		return payments;
-	}
-
 	public List<OrderItem> getOrderItens() {
 		return orderItens;
 	}
+
+	public List<Payment> getPayments() {
+		return payments;
+	}
 	
-	
-		
 }

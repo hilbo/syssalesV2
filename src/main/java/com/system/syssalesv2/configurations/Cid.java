@@ -12,6 +12,7 @@ import com.system.syssalesv2.entities.Address;
 import com.system.syssalesv2.entities.Category;
 import com.system.syssalesv2.entities.City;
 import com.system.syssalesv2.entities.Order;
+import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
 import com.system.syssalesv2.entities.Product;
 import com.system.syssalesv2.entities.State;
@@ -48,9 +49,9 @@ public class Cid implements CommandLineRunner {
 	@Autowired
 	private OrderService orderService;
 	@Autowired
-	private PaymentService paymentService;
-	@Autowired
 	private OrderItemRepository orderItemRepository;
+	@Autowired
+	private PaymentService paymentService;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -103,28 +104,16 @@ public class Cid implements CommandLineRunner {
 		Order order01 = new Order();
 		orderService.save(order01);
 		
-		Payment pay01 = new Payment(null, 2, LocalDateTime.now(), LocalDateTime.now(), 200.0, PaymentState.PENDENTE, PaymentType.CARTAO, order01);
+		Payment pay01 = new Payment(null, 4, LocalDateTime.now(), LocalDateTime.now(), 300.0, PaymentState.QUITADO, PaymentType.BOLETO, order01);
 		paymentService.save(pay01);
 		Payment pay02 = new Payment(null, 4, LocalDateTime.now(), LocalDateTime.now(), 300.0, PaymentState.QUITADO, PaymentType.BOLETO, order01);
 		paymentService.save(pay02);
 				
 		order01.setDate(LocalDateTime.now());
-		//order01.setClient(clientService.findById(clientDTO01.getId()));
+		order01.setClient(clientService.findById(clientDTO01.getId()));
 		order01.setDeliveryAddress(address02);
 		order01.getPayments().addAll(Arrays.asList(pay01, pay02));
-				
-		orderService.update(order01);
-		
-		/*
-		Order order02 = new Order(null, LocalDateTime.now(), clientService.findById(clientDTO02.getId()), address02);
-		orderService.save(order02);
-		
-		Payment pay01 = new PaymentWithCard(null, PaymentState.PENDENTE, 2, order01);
-		paymentService.save(pay01);
-		
-		Payment pay02 = new PaymentWithTicket(null, PaymentState.PENDENTE, LocalDateTime.now(), order02);
-		paymentService.save(pay02);
-		
+						
 		OrderItem orderItem01 = new OrderItem(null, order01, 0.0, 2, product01);
 		OrderItem orderItem02 = new OrderItem(null, order01, 10.0, 1, product01);
 		OrderItem orderItem03 = new OrderItem(null, order01, 50.0, 10, product01);
@@ -136,7 +125,8 @@ public class Cid implements CommandLineRunner {
 		order01.getOrderItens().add(orderItem01);
 		order01.getOrderItens().add(orderItem02);
 		order01.getOrderItens().add(orderItem03);
-		orderService.save(order01);
-		*/
+		
+		orderService.update(order01);
+		
 	}
 }

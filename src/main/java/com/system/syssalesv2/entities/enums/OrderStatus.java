@@ -3,7 +3,8 @@ package com.system.syssalesv2.entities.enums;
 public enum OrderStatus {
 	
 	OPEN(100, "Aberto"),
-	CLOSE(200, "Fechado");
+	CLOSE(200, "Fechado"),
+	NAOIDENTIFICADO(300, "Não Identificada");
 	
 	private Integer cod;
 	private String descript;
@@ -38,7 +39,7 @@ public enum OrderStatus {
 				return orderStatus;
 			}
 		}
-		return null;
+		return NAOIDENTIFICADO;
 	}
 
 }

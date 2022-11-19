@@ -21,13 +21,12 @@ public class Payment implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
 	private Integer numberStallments;
 	private LocalDateTime paymentDate;
 	private LocalDateTime dueDate;
-	private Double paymentValue;
+	private Double paymentedValue;
 	private Long paymentState;
 	private Long paymentType;
 	
@@ -39,12 +38,12 @@ public class Payment implements Serializable{
 	}
 
 	public Payment(Long id, Integer numberStallments, LocalDateTime paymentDate, LocalDateTime dueDate,
-				   Double paymentValue, PaymentState paymentState, PaymentType paymentType, Order order) {
+				   Double paymentedValue, PaymentState paymentState, PaymentType paymentType, Order order) {
 		this.id = id;
 		this.numberStallments = numberStallments;
 		this.paymentDate = paymentDate;
 		this.dueDate = dueDate;
-		this.paymentValue = paymentValue;
+		this.paymentedValue = paymentedValue;
 		this.paymentState = paymentState.getCod();
 		this.paymentType = paymentType.getCod();
 		this.order = order;
@@ -74,12 +73,12 @@ public class Payment implements Serializable{
 		this.dueDate = dueDate;
 	}
 
-	public Double getPaymentValue() {
-		return paymentValue;
+	public Double getValue() {
+		return paymentedValue;
 	}
 
-	public void setPaymentValue(Double paymentValue) {
-		this.paymentValue = paymentValue;
+	public void setValue(Double value) {
+		this.paymentedValue = value;
 	}
 
 	public PaymentState getPaymentState() {
@@ -105,7 +104,7 @@ public class Payment implements Serializable{
 	public void setNumberStallments(Integer numberStallments) {
 		this.numberStallments = numberStallments;
 	}
-
+	
 	public Order getOrder() {
 		return order;
 	}
@@ -113,7 +112,7 @@ public class Payment implements Serializable{
 	public void setOrder(Order order) {
 		this.order = order;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -130,5 +129,4 @@ public class Payment implements Serializable{
 		Payment other = (Payment) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

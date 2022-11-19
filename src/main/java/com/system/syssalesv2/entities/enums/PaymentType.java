@@ -4,7 +4,8 @@ public enum PaymentType {
 
 	CARTAO(900l, "Cartão"), 
 	BOLETO(800l, "Pessoa Jurídica"),
-	DINHEIRO(700l, "Dinheiro");
+	DINHEIRO(700l, "Dinheiro"),
+	NAOIDENTIFICADO(300l, "Não Identificada");
 
 	private Long cod;
 	private String descript;
@@ -36,7 +37,7 @@ public enum PaymentType {
 				return clientType;
 			}
 		}
-		return null;
+		return NAOIDENTIFICADO;
 	}
 
 }

@@ -1,40 +1,51 @@
 package com.system.syssalesv2.services;
 
 import java.util.List;
-
-import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.Payment;
-import com.system.syssalesv2.repositories.OrderRepository;
 import com.system.syssalesv2.repositories.PaymentRepository;
-import com.system.syssalesv2.serviceExecptions.ServiceOrderAssociateException;
-
+import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 
 @Service
 public class PaymentService {
 	@Autowired
 	private PaymentRepository paymentRepository;
-	
-	@Autowired
-	private OrderRepository orderRepository;
 		
 	public List<Payment> findAll(){
 		return paymentRepository.findAll();
 	}
 	
-	@Transactional
-	public Payment save(Payment payment) {
-		  return paymentRepository.save(payment);
-	}
-
-	private void findPerOrder(Long orderId) {
-		Order order = orderRepository.findById(orderId).get();
-		if (paymentRepository.findPerOrder(order) != null) {
-			throw new ServiceOrderAssociateException("Pedido já está associado a um pagamento !");
+	public Payment findById(Long id) {
+		try {
+			return paymentRepository.findById(id).get();
+		} catch (NoSuchElementException e) {
+			throw new ServiceNoSuchElementException("Pagamento não encontrado !", "Payment");
 		}
+	}
+	
+	public Payment save(Payment payment) {
+		return paymentRepository.save(payment);
+	}
+	
+	public Payment insert(Payment payment){
+		if (payment.equals(null)) {
+			throw new RuntimeException("Erro aqui");
+		}
+		
+		if (payment.getPaymentState().equals(null)) {
+			throw new RuntimeException("Erro aqui");
+		}
+		
+		
+		return save(payment);
+	}
+		
+	public void delete(Long id) {
+		paymentRepository.delete(findById(id));
+		
 	}
 }

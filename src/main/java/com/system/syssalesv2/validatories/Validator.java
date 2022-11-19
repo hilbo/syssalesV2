@@ -1,6 +1,6 @@
 package com.system.syssalesv2.validatories;
 
-import com.system.syssalesv2.entities.Order;
+import com.system.syssalesv2.DTO.OrderInserDTO;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.resourcesExecpitions.StandardException;
 
@@ -13,8 +13,9 @@ public interface Validator {
 	void validTelephone(String value, String field);
 	void validEmailReapt(String value, String field, ClientRepository clientRepository);
 	void notNullEntite(Object obj, String field);
-	void validOrderInsert(Order order);
-	public StandardException getError();
+	void validOrderInsert(OrderInserDTO orderInsertDto);
+	StandardException getError();
+	void setError(StandardException error);
 	void valid();
 	
 }

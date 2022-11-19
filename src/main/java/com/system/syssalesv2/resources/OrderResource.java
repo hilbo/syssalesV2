@@ -30,10 +30,9 @@ public class OrderResource {
 	
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody OrderInserDTO order){
-		Order order2 = new Order();
-		order2 = orderService.insert(order);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + order2.getId()).build().toUri();
+		Order orderTmp = new Order();
+		orderTmp = orderService.insert(order);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + orderTmp.getId()).build().toUri();
 		return ResponseEntity.created(uri).build();
 	}
-
 }

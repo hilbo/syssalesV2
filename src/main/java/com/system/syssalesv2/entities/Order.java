@@ -104,8 +104,7 @@ public class Order implements Serializable {
 	public List<OrderItem> getOrderItens() {
 		return orderItens;
 	}
-	
-		
+			
 	public List<Payment> getPayments() {
 		return payments;
 	}

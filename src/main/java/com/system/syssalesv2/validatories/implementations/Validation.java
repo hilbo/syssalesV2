@@ -7,7 +7,7 @@ import javax.validation.ValidationException;
 
 import org.springframework.stereotype.Service;
 
-import com.system.syssalesv2.entities.Order;
+import com.system.syssalesv2.DTO.OrderInserDTO;
 import com.system.syssalesv2.entities.enums.ClientType;
 import com.system.syssalesv2.repositories.ClientRepository;
 import com.system.syssalesv2.resourcesExecpitions.SpecificException;
@@ -147,15 +147,14 @@ public class Validation implements Validator {
 	}
 	
 	@Override
-	public void validOrderInsert(Order order) {
-		notNullEntite(order.getClient(), "order.client");
-		notNullEntite(order.getDeliveryAddress(), "order.deliveryAddress");
-		notNullEntite(order.getOrderItens(), "order.orderItens");
-		if (order.getOrderItens().isEmpty()) {
+	public void validOrderInsert(OrderInserDTO orderInsertDto) {
+		notNullEntite(orderInsertDto.getClientId(), "order.client");
+		notNullEntite(orderInsertDto.getDeliveryAddressId(), "order.deliveryAddress");
+		notNullEntite(orderInsertDto.getOrderItens(), "order.orderItens");
+		if (orderInsertDto.getOrderItens().isEmpty()) {
 			validBlanck("", "order.orderItens");
 		}
-										
-		valid();
+		
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import com.system.syssalesv2.repositories.OrderRepository;
 import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 import com.system.syssalesv2.validatories.Validator;
 import com.system.syssalesv2.validatories.execptions.ValidationExceptionService;
-import com.system.syssalesv2.validatories.implementations.Validation;
+import com.system.syssalesv2.validatories.implementations.ValidationOrderInsert;
 
 @Service
 public class OrderService {
@@ -54,7 +54,10 @@ public class OrderService {
 
 	@Transactional
 	public Order insert(OrderInserDTO orderInsertDto) {
+		Validator validator = new ValidationOrderInsert();
+		
 		try {
+			validator.validOrderInsert(orderInsertDto);
 			Order order = new Order();
 			save(order);
 
@@ -69,10 +72,10 @@ public class OrderService {
 					throw new NoSuchElementException("Endereço de entrega não informado ou não encontrado !");
 				}
 			}
-			
+
 			for (OrderItem orderItem : orderInsertDto.getOrderItens()) {
-				orderItem.setQuantity(orderItem.getQuantity());	
-				orderItem.setDiscount(orderItem.getDiscount());				
+				orderItem.setQuantity(orderItem.getQuantity());
+				orderItem.setDiscount(orderItem.getDiscount());
 				orderItem.setProduct(productService.findById(orderItem.getProduct().getId()));
 				orderItem.setOrder(order);
 				orderItem.setPrice();
@@ -83,62 +86,23 @@ public class OrderService {
 			for (Payment payment : orderInsertDto.getPayments()) {
 				payment.setPaymentState(payment.getPaymentState());
 				payment.setOrder(order);
-				order.getPayments().add(paymentService.save(payment));
-				paymentAmount = paymentAmount + payment.getPaymentValue();
+				payment.setPaymentDate(LocalDateTime.parse(payment.getPaymentDate().toString()));
+				order.getPayments().add(paymentService.insert(payment));
+				paymentAmount = paymentAmount + payment.getValue();
 			}
+
 			update(order);
 			return order;
 		} catch (NoSuchElementException e) {
 			throw new ServiceNoSuchElementException(e.getMessage(), "");
-		}
-
-	}
-
-	public void update(Order order) {
-		orderRepository.save(order);
-	}
-
-	@Transactional
-	public Order insert2(Order order, String str) {
-
-		Validator validator = new Validation();
-
-		try {
-			validator.validOrderInsert(order);
-
-			Order orderTmp = new Order();
-			save(orderTmp);
-
-			if (str.equals("1")) {
-				// orderTmp.setPayment(paymentService.save(new PaymentWithCard(null,
-				// PaymentState.PENDENTE, 2, orderTmp)));
-			}
-
-			orderTmp.setClient(clientService.findById(order.getClient().getId()));
-			orderTmp.setDate(LocalDateTime.now());
-
-			for (Address address : clientService.findById(order.getClient().getId()).getAddresses()) {
-				if (address.getId() == (order.getDeliveryAddress().getId())) {
-					orderTmp.setDeliveryAddress(address);
-				}
-				if (address.getId() != (order.getDeliveryAddress().getId())) {
-					throw new NoSuchElementException("Endereço de entrega não informado ou não encontrado !");
-				}
-			}
-
-			for (OrderItem orderItem : order.getOrderItens()) {
-				orderItem.setProduct(productService.findById(orderItem.getProduct().getId()));
-				orderItem.setOrder(orderTmp);
-				orderItem.setPrice();
-				orderTmp.getOrderItens().add(orderItemService.save(orderItem));
-			}
-
-			return save(orderTmp);
 		} catch (ValidationException e) {
 			throw new ValidationExceptionService(e.getMessage(), validator.getError());
-		} catch (NoSuchElementException e) {
-			throw new ServiceNoSuchElementException(e.getMessage(), "");
 		}
+		
 
+	}
+	
+	public void update(Order order) {
+		orderRepository.save(order);
 	}
 }

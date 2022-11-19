@@ -1,14 +1,13 @@
 package com.system.syssalesv2.entities.enums;
 
 public enum PaymentState {
-	
-	PENDENTE(500l, "Pendente"),
-	QUITADO(600l, "Quitado"),
-	CANCELADO(600l, "Cancelado");
-	
+
+	PENDENTE(500l, "Pendente"), QUITADO(600l, "Quitado"), CANCELADO(600l, "Cancelado"),
+	NAOIDENTIFICADO(6008l, "Não Identificado");
+
 	private Long cod;
 	private String descript;
-	
+
 	private PaymentState(Long cod, String descript) {
 		this.cod = cod;
 		this.descript = descript;
@@ -29,16 +28,17 @@ public enum PaymentState {
 	public void setDescript(String descript) {
 		this.descript = descript;
 	}
-	
+
 	public static PaymentState statePaymentToEnum(Long cod) {
-		
+		if (cod == null) {
+			cod = 0l;
+		}
 		for (PaymentState paymentState : PaymentState.values()) {
 			if (cod.equals(paymentState.getCod())) {
 				return paymentState;
 			}
 		}
-		
-		return null;
+		return NAOIDENTIFICADO;
 	}
 
 }
