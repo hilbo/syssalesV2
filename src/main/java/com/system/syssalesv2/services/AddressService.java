@@ -26,6 +26,9 @@ public class AddressService {
 	
 	public Address findById(Long id) {
 		try {
+			if (addressRepository.findById(id) == null) {
+				throw new NoSuchElementException();
+			}
 			return addressRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
 			throw new ServiceNoSuchElementException("Endereço não encontrado !", "Address");
@@ -33,7 +36,13 @@ public class AddressService {
 	}
 	
 	public void delete(Long id) {
-		addressRepository.delete(findById(id));
-		
+		try {
+			if (addressRepository.findById(id) == null) {
+				throw new NoSuchElementException();
+			}
+			addressRepository.delete(findById(id));
+		} catch (NoSuchElementException e) {
+			throw new ServiceNoSuchElementException("Endereço não encontrado !", "Address");
+		}
 	}
 }

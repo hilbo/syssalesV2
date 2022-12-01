@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.system.syssalesv2.DTO.OrderInserDTO;
+import com.system.syssalesv2.DTO.OrderDTO;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.services.OrderService;
 
@@ -29,7 +29,7 @@ public class OrderResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody OrderInserDTO order){
+	public ResponseEntity<Void> insert(@RequestBody OrderDTO order){
 		Order orderTmp = new Order();
 		orderTmp = orderService.insert(order);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/" + orderTmp.getId()).build().toUri();

@@ -32,10 +32,13 @@ public class ProductService {
 	
 	public Product findById(Long id) {
 		try {
+			if (id == null) {
+				id = 0l;
+			}
 			return productRepository.findById(id).get();
 		} catch (NoSuchElementException e) {
 			throw new ServiceNoSuchElementException("Produto não encontrado !", "Product");
-		}
+		}	
 	}
 
 	public Page<Product> findByNameAndCategories(String productName, List<String> categoriesIds, Pageable page) {

@@ -2,13 +2,13 @@ package com.system.syssalesv2.DTO;
 
 import java.io.Serializable;
 
-public class ClientInsertDTO implements Serializable {
+import com.system.syssalesv2.entities.City;
+
+public class ClientDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	//@NotBlank(message = "É obrigatório o preenchimento do nome !")
 	private String name;
-	//@NotBlank(message = "É obrigatório o preenchimento do email !")
 	private String email;
 	private String cpfOrCnpj;
 	private String type;
@@ -18,13 +18,13 @@ public class ClientInsertDTO implements Serializable {
 	private String number;
 	private String complement;
 	private String zipCod;
-	private String cityId;
+	private String cityName;
 	
-	public ClientInsertDTO() {
+	public ClientDTO() {
 	}
 	
-	public ClientInsertDTO(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
-			String address, String number, String complement, String zipCod, String cityId) {
+	public ClientDTO(Long id, String name, String email, String cpfOrCnpj, String type, String telephone1, String telephone2,
+			String address, String number, String complement, String zipCod, City city) {
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -36,7 +36,7 @@ public class ClientInsertDTO implements Serializable {
 		this.number = number;
 		this.complement = complement;
 		this.zipCod = zipCod;
-		this.cityId = cityId;
+		this.cityName = city.getName();
 	}
 	
 	public Long getId() {
@@ -127,12 +127,12 @@ public class ClientInsertDTO implements Serializable {
 		this.zipCod = zipCod;
 	}
 
-	public String getCityId() {
-		return cityId;
+	public String getCityName() {
+		return cityName;
 	}
 		
-	public void setCityId(String cityId) {
-		this.cityId = cityId;
+	public void setCity(City city) {
+		this.cityName = city.getName();
 	}
 }
  

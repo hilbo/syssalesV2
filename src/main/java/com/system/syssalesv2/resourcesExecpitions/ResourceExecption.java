@@ -38,14 +38,6 @@ public class ResourceExecption {
 		errors.setError(HttpStatus.NOT_FOUND.name());
 		errors.setStatus(HttpStatus.NOT_FOUND.value());
         error.getErros().add(errors);
-		
-		
-
-		
-		
-		
-		
-
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 	}
 

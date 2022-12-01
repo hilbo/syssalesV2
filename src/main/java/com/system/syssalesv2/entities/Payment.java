@@ -10,26 +10,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.ValidationException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.system.syssalesv2.entities.enums.PaymentState;
-import com.system.syssalesv2.entities.enums.PaymentType;
 
 @Entity
 @Table(name = "tb_payment")
-public class Payment implements Serializable{
+public abstract class Payment implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Integer numberStallments;
 	private LocalDateTime paymentDate;
-	private LocalDateTime dueDate;
-	private Double paymentedValue;
 	private Long paymentState;
-	private Long paymentType;
-	
+	private Double paymentValue;
+		
 	@JsonIgnore
 	@OneToOne
 	private Order order;
@@ -37,15 +34,11 @@ public class Payment implements Serializable{
 	public Payment() {
 	}
 
-	public Payment(Long id, Integer numberStallments, LocalDateTime paymentDate, LocalDateTime dueDate,
-				   Double paymentedValue, PaymentState paymentState, PaymentType paymentType, Order order) {
+	public Payment(Long id, LocalDateTime paymentDate, PaymentState paymentState, Double paymentValue, Order order) {
 		this.id = id;
-		this.numberStallments = numberStallments;
 		this.paymentDate = paymentDate;
-		this.dueDate = dueDate;
-		this.paymentedValue = paymentedValue;
 		this.paymentState = paymentState.getCod();
-		this.paymentType = paymentType.getCod();
+		this.paymentValue = paymentValue;
 		this.order = order;
 	}
 
@@ -58,6 +51,9 @@ public class Payment implements Serializable{
 	}
 
 	public LocalDateTime getPaymentDate() {
+		if (paymentDate == null) {
+			throw new ValidationException();
+		}
 		return paymentDate;
 	}
 
@@ -65,23 +61,10 @@ public class Payment implements Serializable{
 		this.paymentDate = paymentDate;
 	}
 
-	public LocalDateTime getDueDate() {
-		return dueDate;
-	}
-
-	public void setDueDate(LocalDateTime dueDate) {
-		this.dueDate = dueDate;
-	}
-
-	public Double getValue() {
-		return paymentedValue;
-	}
-
-	public void setValue(Double value) {
-		this.paymentedValue = value;
-	}
-
 	public PaymentState getPaymentState() {
+		if (paymentState == null) {
+			throw new ValidationException();
+		}
 		return PaymentState.statePaymentToEnum(this.paymentState);
 	}
 
@@ -89,28 +72,20 @@ public class Payment implements Serializable{
 		this.paymentState = paymentState.getCod();
 	}
 
-	public PaymentType getPaymentType() {
-		return PaymentType.typeClientToEnum(this.paymentType);
-	}
-
-	public void setPaymentType(PaymentType paymentType) {
-		this.paymentType = paymentType.getCod();
-	}
-	
-	public Integer getNumberStallments() {
-		return numberStallments;
-	}
-
-	public void setNumberStallments(Integer numberStallments) {
-		this.numberStallments = numberStallments;
-	}
-	
 	public Order getOrder() {
 		return order;
 	}
 
 	public void setOrder(Order order) {
 		this.order = order;
+	}
+	
+	public Double getPaymentValue() {
+		return paymentValue;
+	}
+
+	public void setPaymentValue(Double paymentValue) {
+		this.paymentValue = paymentValue;
 	}
 
 	@Override
@@ -129,4 +104,6 @@ public class Payment implements Serializable{
 		Payment other = (Payment) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	
 }

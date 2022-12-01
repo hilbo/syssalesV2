@@ -1,5 +1,7 @@
 package com.system.syssalesv2.services;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +12,30 @@ import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
 @Service
 public class CityService {
 	@Autowired
-	private CityRepository clientRepository;
+	private CityRepository cityRepository;
 	
-	public City save(City client) {
-		return clientRepository.save(client);
+	public City save(City city) {
+		return cityRepository.save(city);
 	}
 	
 	public City findById(Long id) {
 		try {
-			return clientRepository.findById(id).get();
-		} catch (Exception e) {
+			if (cityRepository.findById(id) == null) {
+				throw new NoSuchElementException();
+			}
+			return cityRepository.findById(id).get();
+		} catch (NoSuchElementException e) {
+			throw new ServiceNoSuchElementException("Cidade não encontrado !", "City");
+		}
+	}
+	
+	public City findByName(String name) {
+		try {
+			if (cityRepository.findByName(name) == null) {
+				throw new NoSuchElementException();
+			}
+			return cityRepository.findByName(name);
+		} catch (NoSuchElementException e) {
 			throw new ServiceNoSuchElementException("Cidade não encontrado !", "City");
 		}
 	}

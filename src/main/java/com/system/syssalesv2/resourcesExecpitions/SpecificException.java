@@ -13,7 +13,18 @@ public class SpecificException implements Serializable{
 		
 	public SpecificException() {
 	}
-			
+				
+	public SpecificException(Integer codInternal, Integer status, String error, String defaultMessage, String field) {
+		super();
+		this.codInternal = codInternal;
+		this.status = status;
+		this.error = error;
+		this.defaultMessage = defaultMessage;
+		this.field = field;
+	}
+
+
+
 	public Integer getStatus() {
 		return status;
 	}

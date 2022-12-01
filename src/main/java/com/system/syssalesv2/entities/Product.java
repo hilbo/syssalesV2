@@ -28,6 +28,7 @@ public class Product implements Serializable {
 	private Long id;
 	private String name;
 	private Double price;
+	private Integer quantityStock;
 	
 	@JsonIgnore
 	@ManyToMany
@@ -47,6 +48,7 @@ public class Product implements Serializable {
 		this.id = id;
 		this.name = name;
 		this.price = price;
+		this.quantityStock = 0;
 	}
 
 	public Long getId() {
@@ -76,6 +78,18 @@ public class Product implements Serializable {
 	public Set<Category> getCategories() {
 		return categories;
 	}
+	
+	public List<OrderItem> getOrderItens() {
+		return orderItens;
+	}
+
+	public Integer getQuantityStock() {
+		return quantityStock;
+	}
+
+	public void insertQuantityStock(Integer quantity) {
+		this.quantityStock = this.quantityStock + quantity;
+	}
 
 	@Override
 	public int hashCode() {
@@ -92,9 +106,5 @@ public class Product implements Serializable {
 			return false;
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
-	}
-
-	public List<OrderItem> getOrderItens() {
-		return orderItens;
 	}
 }

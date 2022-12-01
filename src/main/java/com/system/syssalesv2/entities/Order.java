@@ -43,14 +43,12 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, LocalDateTime date, Client client, Address deliveryAddress, Payment payment) {
+	public Order(Long id, LocalDateTime date, Client client, Address deliveryAddress) {
 		this.id = id;
 		this.date = date;
 		this.client = client;
 		this.deliveryAddress = deliveryAddress;
 		this.orderStatus = OrderStatus.OPEN.getCod();
-		getPayments().add(payment);
-		
 	}
 
 	public Long getId() {

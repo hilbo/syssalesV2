@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.ValidationException;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,8 +28,7 @@ public class OrderItem implements Serializable {
 
 	@OneToOne
 	private Product product;
-
-	//@Transient
+	
 	@JsonIgnore
 	@ManyToOne
 	private Order order;
@@ -39,29 +39,27 @@ public class OrderItem implements Serializable {
 	public OrderItem(Long id, Order order, Double discount, Integer quantity, Product product) {
 		this.id = id;
 		this.order = order;
-		if (discount == null) {
-			this.discount = 0.0;
-		}else {
-			this.discount = discount;
-		}
+		this.discount = discount;
 		this.quantity = quantity;
 		this.product = product;
 		setPrice();
 	}
 
 	public Double getDiscount() {
+		if (discount == null) {
+			throw new ValidationException();
+		}
 		return discount;
 	}
 
 	public void setDiscount(Double discount) {
-		if (discount == null) {
-			this.discount = 0.0;
-		}else {
-			this.discount = discount;
-		}
+		this.discount = discount;
 	}
 
 	public Integer getQuantity() {
+		if (quantity == null) {
+			throw new ValidationException();
+		}
 		return quantity;
 	}
 
@@ -88,6 +86,9 @@ public class OrderItem implements Serializable {
 	}
 
 	public Product getProduct() {
+		if (product == null) {
+				throw new ValidationException();
+			}
 		return product;
 	}
 
@@ -104,6 +105,9 @@ public class OrderItem implements Serializable {
 	}
 
 	public Order getOrder() {
+		if (order == null) {
+			throw new ValidationException();
+		}
 		return order;
 	}
 

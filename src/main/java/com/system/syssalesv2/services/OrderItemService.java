@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.repositories.OrderItemRepository;
 import com.system.syssalesv2.serviceExecptions.ServiceNoSuchElementException;
+import com.system.syssalesv2.validatories.execptions.ValidationExceptionService;
 
 @Service
 public class OrderItemService {
@@ -17,6 +18,7 @@ public class OrderItemService {
 	private OrderItemRepository orderItemRepository;
 	@Autowired
 	private ProductService productService;
+	
 
 	public OrderItem findById(Long id) {
 		try {
@@ -25,22 +27,28 @@ public class OrderItemService {
 			throw new ServiceNoSuchElementException("Item de pedido não encontrado !", "OrderItem");
 		}
 	}
-	
+		
 	@Transactional
-	public OrderItem save(OrderItem orderItem) {
-		orderItem.setId(null);
-		return orderItemRepository.save(orderItem);
-	}
-	
 	public OrderItem insert(OrderItem orderItem) {
+			
 		orderItem.setId(null);
-		orderItem.setQuantity(orderItem.getQuantity());	
-		orderItem.setDiscount(orderItem.getDiscount());				
-		orderItem.setProduct(productService.findById(orderItem.getProduct().getId()));
-		orderItem.setOrder(orderItem.getOrder());
-		orderItem.setPrice();
-		save(orderItem);
-		return orderItem;
+		//Validator validator = new ValidationOrderItem();
+		try {
+			orderItem.setId(null);
+			
+			//validator.validOrderItem(orderItem, productService);
+						
+			orderItem.setQuantity(orderItem.getQuantity());	
+			orderItem.setDiscount(orderItem.getDiscount());				
+			orderItem.setProduct(productService.findById(orderItem.getProduct().getId()));
+			orderItem.setOrder(orderItem.getOrder());
+			orderItem.setPrice();
+			return orderItemRepository.save(orderItem);
+		} catch (ValidationExceptionService e) {
+			throw new ValidationExceptionService(e.getMessage(), e.getError());
+		} catch (ServiceNoSuchElementException e) {
+			throw new ServiceNoSuchElementException("erro", "prod null");
+		}
 	}
 
 	public void delete(Long id) {
