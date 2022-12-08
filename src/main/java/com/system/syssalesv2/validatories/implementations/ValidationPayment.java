@@ -1,12 +1,16 @@
 package com.system.syssalesv2.validatories.implementations;
 
+import javax.validation.ValidationException;
+
 import org.springframework.stereotype.Service;
 
 import com.system.syssalesv2.DTO.OrderDTO;
+import com.system.syssalesv2.DTO.PaymentDTO;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
 import com.system.syssalesv2.repositories.ClientRepository;
+import com.system.syssalesv2.resourcesExecpitions.SpecificException;
 import com.system.syssalesv2.resourcesExecpitions.StandardException;
 import com.system.syssalesv2.services.PaymentService;
 import com.system.syssalesv2.services.ProductService;
@@ -21,7 +25,42 @@ public class ValidationPayment implements Validator {
 	}
 
 	@Override
-	public void validPayment(Payment payment, PaymentService paymentRepository) {
+	public void validPaymentWithCard(PaymentDTO paymentDTO) {
+		try {
+			paymentDTO.getPaymentDate();
+		} catch (ValidationException e) {
+			error.getErros().add(new SpecificException(01, 01, "A data de pagamento não pode ser nula !", "Data de pagamento nula !",
+					"order.orderItem.date"));
+		}
+		
+		try {
+			paymentDTO.getPaymentedValue();
+		} catch (ValidationException e) {
+			error.getErros().add(new SpecificException(01, 01, "O valor do pagamento não pode ser nulo !", "Valor de pagamento nulo !",
+					"order.payment.PaymentedValue"));
+		}
+		
+		try {
+			paymentDTO.getPaymentState();
+		} catch (ValidationException e) {
+			error.getErros().add(new SpecificException(01, 01, "O estado de pagamento não pode ser nulo !", "Estado de pagamentoEstado de pagamento nulo !",
+					"order.payment.state"));
+		}
+		
+		try {
+			paymentDTO.getNumberStallments();
+		} catch (ValidationException e) {
+			error.getErros().add(new SpecificException(01, 01, "Número de parcelas não informado !", "Número de parcelas não informado !",
+					"order.payment.numberStallments"));
+		}
+		
+				
+		valid();
+		
+	}
+	
+	@Override
+	public void validPayment(Payment payment) {
 		
 		/*
 		try {
@@ -30,6 +69,7 @@ public class ValidationPayment implements Validator {
 			error.getErros().add(new SpecificException(01, 01, "A data de pagamento não pode ser nula !", "Data de pagamento nula !",
 					"order.orderItem.date"));
 		}
+		
 		
 		try {
 			payment.getPaymentedValue();
@@ -62,6 +102,17 @@ public class ValidationPayment implements Validator {
 				error.getErros().add(new SpecificException(01, 01, "Número de parcelas não pode ser negativo !", "Número de parcelas negativo !",
 						"order.payment.numberStallments"));
 			}
+			
+			
+			Validator validator02 = new ValidationPayment();
+		for (PaymentDTO paymentDTO : orderInsertDto.getPaymentsDTO()) {
+			try {
+				validator02.validPayment(paymentDTO);
+			} catch (ValidationExceptionService e) {
+				error.getErros().addAll(e.getError().getErros());
+				e.getError().getErros().clear();
+			}
+		}
 			
 			*/		
 		
@@ -163,5 +214,4 @@ public class ValidationPayment implements Validator {
 	}
 
 	
-
 }

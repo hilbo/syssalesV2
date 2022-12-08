@@ -41,7 +41,7 @@ public abstract class Payment implements Serializable{
 		this.paymentValue = paymentValue;
 		this.order = order;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}

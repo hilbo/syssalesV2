@@ -1,6 +1,7 @@
 package com.system.syssalesv2.validatories;
 
 import com.system.syssalesv2.DTO.OrderDTO;
+import com.system.syssalesv2.DTO.PaymentDTO;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
@@ -24,8 +25,9 @@ public interface Validator {
 	void aboveZero(Integer value, String field);
 	void validOrder(OrderDTO orderInsertDto, ProductService productService, PaymentService paymentService);
 	void validOrderItem(OrderItem orderItem, ProductService productService);
-	void validPayment(Payment payment, PaymentService paymentService);
+	void validPayment(Payment payment);
 	void validPaymentOrder(Order order);
+	void validPaymentWithCard(PaymentDTO paymentDTO);
 	void valid();
 	
 	

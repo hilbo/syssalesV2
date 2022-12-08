@@ -58,6 +58,9 @@ public class PaymentDTO implements Serializable{
 	}
 
 	public LocalDateTime getDueDate() {
+		if (paymentDate == null) {
+			throw new ValidationException();
+		}
 		return dueDate;
 	}
 
@@ -99,6 +102,9 @@ public class PaymentDTO implements Serializable{
 	}
 	
 	public Integer getNumberStallments() {
+		if (paymentType == null) {
+			throw new ValidationException();
+		}
 		return numberStallments;
 	}
 

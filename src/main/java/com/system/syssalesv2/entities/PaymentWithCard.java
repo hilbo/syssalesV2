@@ -23,7 +23,7 @@ public class PaymentWithCard extends Payment{
 		super(id, paymentDate, paymentState, paymentValue, order);
 		this.numberStallments = numberStallments; 
 	}
-
+	
 	public Integer getNumberStallments() {
 		return numberStallments;
 	}

@@ -48,7 +48,7 @@ public class Order implements Serializable {
 		this.date = date;
 		this.client = client;
 		this.deliveryAddress = deliveryAddress;
-		this.orderStatus = OrderStatus.OPEN.getCod();
+		//this.orderStatus = OrderStatus.OPEN.getCod();
 	}
 
 	public Long getId() {
@@ -84,6 +84,9 @@ public class Order implements Serializable {
 	}
 		
 	public OrderStatus getOrderStatus() {
+		if (OrderStatus.orderStatusToEnum(orderStatus) ==(OrderStatus.NAOIDENTIFICADO)) {
+			return OrderStatus.OPEN;
+		}
 		return OrderStatus.orderStatusToEnum(orderStatus);
 	}
 

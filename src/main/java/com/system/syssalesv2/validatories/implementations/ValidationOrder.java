@@ -5,6 +5,7 @@ import javax.validation.ValidationException;
 import org.springframework.stereotype.Service;
 
 import com.system.syssalesv2.DTO.OrderDTO;
+import com.system.syssalesv2.DTO.PaymentDTO;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
@@ -24,50 +25,37 @@ public class ValidationOrder implements Validator {
 	}
 
 	@Override
-	public void validOrder(OrderDTO orderInsertDto, ProductService productService, PaymentService paymentService) {
+	public void validOrder(OrderDTO orderDto, ProductService productService, PaymentService paymentService) {
 		try {
-			orderInsertDto.getClientId();
+			orderDto.getClientId();
 		} catch (ValidationException e) {
 			error.getErros().add(new SpecificException(235555, 235555, "Cliente não pode ser nulo valid !",
 					"Cliente nulo !", "order.client"));
 		}
 
 		try {
-			orderInsertDto.getDeliveryAddressId();
+			orderDto.getDeliveryAddressId();
 		} catch (ValidationException e) {
 			error.getErros().add(new SpecificException(30033, 30033, "Endereço de entrega não pode ser nulo valid !",
 					"endereço nulo !", "order.deliveryAddress"));
 		}
 
-		if (orderInsertDto.getOrderItens().isEmpty()) {
+		if (orderDto.getOrderItens().isEmpty()) {
 			error.getErros().add(new SpecificException(222222, 2222222, "Item de pedido não pode ser nulo valid !",
 					"Item de pedido nulo !", "order.orderItens"));
 		}
 
-		Validator validator = new ValidationOrderItem();
-		for (OrderItem orderItem : orderInsertDto.getOrderItens()) {
+		Validator validatorOrderItem = new ValidationOrderItem();
+		for (OrderItem orderItem : orderDto.getOrderItens()) {
 			try {
-				validator.validOrderItem(orderItem, productService);
+				validatorOrderItem.validOrderItem(orderItem, productService);
 			} catch (ValidationExceptionService e) {
 				error.getErros().addAll(e.getError().getErros());
 				e.getError().getErros().clear();
 			}
 		}
-
-		/*
-		 * if (orderInsertDto.getPayments().isEmpty()) { error.getErros().add(new
-		 * SpecificException(555, 5555, "O pagamento não pode ser nulo !",
-		 * "Pagamento nulo !", "order.payments")); }
-		 * 
-		 * Validator validator2 = new ValidationPayment(); for (Payment payment :
-		 * orderInsertDto.getPayments()) { try { validator2.validPayment(payment,
-		 * paymentService); } catch (ValidationExceptionService e) {
-		 * error.getErros().addAll(e.getError().getErros());
-		 * e.getError().getErros().clear(); } }
-		 */
-
+				
 		valid();
-
 	}
 
 	@Override
@@ -172,9 +160,15 @@ public class ValidationOrder implements Validator {
 	}
 
 	@Override
-	public void validPayment(Payment payment, PaymentService paymentService) {
+	public void validPayment(Payment payment) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void validPaymentWithCard(PaymentDTO paymentDTO) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

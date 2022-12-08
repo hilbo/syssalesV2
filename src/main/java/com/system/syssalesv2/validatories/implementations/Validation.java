@@ -8,6 +8,7 @@ import javax.validation.ValidationException;
 import org.springframework.stereotype.Service;
 
 import com.system.syssalesv2.DTO.OrderDTO;
+import com.system.syssalesv2.DTO.PaymentDTO;
 import com.system.syssalesv2.entities.Order;
 import com.system.syssalesv2.entities.OrderItem;
 import com.system.syssalesv2.entities.Payment;
@@ -225,13 +226,19 @@ public class Validation implements Validator {
 	}
 
 	@Override
-	public void validPayment(Payment payment, PaymentService paymentService) {
+	public void validPayment(Payment payment) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void validPaymentOrder(Order order) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void validPaymentWithCard(PaymentDTO paymentDTO) {
 		// TODO Auto-generated method stub
 		
 	}
